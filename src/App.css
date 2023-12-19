@@ -1,38 +1,142 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Kalnia:wght@700&family=Pixelify+Sans&family=Tilt+Prism&display=swap");
+:root {
+  --text-color: #dadada;
+  --tw-bg-opacity: 1;
+  --bg-purple: rgb(11 2 26 / var(--tw-bg-opacity));
+
+  --bg-purple-50: rgba(11, 2, 26, 0.5);
+  --complementary: #aed2ff;
+  --complementary-dark: #3b8ef4;
+  --pixelify: "Pixelify Sans", sans-serif;
+  --Tilt: "Tilt Prism", sans-serif;
+  --Kalnia: "Kalnia", serif;
+}
+body {
+  color: var(--text-color);
+  height: 100vh;
+  background-color: var(--bg-purple) !important;
+}
+#logoText {
+  font-family: var(--Kalnia);
+  font-size: 1.4rem;
+  user-select: none;
+}
+.font-Kalnia {
+  font-family: var(--Kalnia);
+}
+.navbar {
+  color: var(--text-color);
+}
+#PixelHeroText {
+  font-family: "Pixelify Sans", sans-serif;
+  text-transform: uppercase;
+  font-weight: 100;
+  line-break: strict !important;
+  display: inline-block;
+}
+#CodeHeroText {
+  font-family: "Tilt Prism", sans-serif;
+  line-break: strict !important;
+  display: inline-block;
+}
+#heroText {
+  font-family: serif;
+}
+/* .btn{
+  border: thin solid var(--text-color);
+  padding: 10px 2rem;
+  border-radius: 45%;
+} */
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+  font-family: "Muli", sans-serif;
+  font-weight: 300;
+  line-height: 1;
+  padding: 4px 0;
+  color: var(--text-color);
+  opacity: 0.75;
+  transition: all 0.5s ease-in-out;
+}
+.btn svg {
+  fill: transparent;
+  stroke: var(--text-color);
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke-dasharray: 338;
+  stroke-dashoffset: 338;
+  stroke-linecap: round;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% + 60px);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: stroke-dashoffset 0s 0.2s, opacity 0.2s;
+  z-index: -1;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.btn:hover svg {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition: opacity 0s,
+    stroke-dashoffset 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.btn:hover {
   color: white;
+  opacity: 1;
+}
+.stackItem {
+  background: #07435f;
+  background-image: linear-gradient(to right top, #14243c, #11334e, #07435f);
+  opacity: 0.75;
+}
+.stackItem:hover {
+  background: #07435f;
+  background-image: linear-gradient(to right top, #14243c, #11334e, #07435f);
+  opacity: 1;
+}
+@media only screen and (max-width: 600px) {
+  .stackItem {
+    opacity: 1;
+  }
+  .btn svg {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition: opacity 0s,
+      stroke-dashoffset 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  .btn {
+    color: white;
+    opacity: 1;
+  }
+}
+.link {
+  border-bottom: thin dashed var(--complementary);
+}
+.SubHeadText {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.project_title {
+  font-family: var(--Kalnia);
+}
+.TypedText {
+  background-color: red;
 }
 
-.App-link {
-  color: #61dafb;
+.bg-purple {
+  background-color: var(--bg-purple);
+}
+.footer-gradient {
+  background: radial-gradient(
+    128.5% 107.13% at 50% 2.92%,
+    transparent 37.41%,
+    #a033ee 78.65%,
+    #fff 100%
+  );
+  position: relative;
+  bottom: 0;
+  z-index: 999 !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
