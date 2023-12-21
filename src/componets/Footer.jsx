@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { NavListItems } from "./Navbar";
 const footerLinks = [
   ...NavListItems,
-  { title: "Blog", link: "" },
+  { title: "Blog", link: "blog" },
   { title: "about", link: "about" },
 ];
 

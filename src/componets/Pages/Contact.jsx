@@ -5,6 +5,10 @@ import { ApiBaseURL } from "../..";
 import qs from "qs";
 import { TailSpin } from "react-loader-spinner";
 function Contact() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Contact Me";
+  }, []);
   let [responseData, setresponse] = useState("");
   const [spinner, setSpinner] = useState(false);
   const handleSubmit = (e) => {
@@ -22,7 +26,7 @@ function Contact() {
     axios({
       method: "post",
       headers: { "content-type": "application/x-www-form-urlencoded" },
-      url: `${ApiBaseURL}contact`,
+      url: `${ApiBaseURL}api/contact`,
       data: qs.stringify(data),
     })
       .then((response) => {

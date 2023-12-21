@@ -7,12 +7,12 @@ function Background() {
       <img
         src={gradient}
         alt=""
-        className="block md:hidden absolute opacity-60 w-screen rotate-90 z-0"
+        className="block md:hidden absolute opacity-60 w-screen rotate-90 -z-10"
       />
       <img
         src={gradient}
         alt=""
-        className="hidden md:block absolute opacity-40 z-0"
+        className="hidden md:block absolute opacity-40 -z-10"
       />
     </>
   );

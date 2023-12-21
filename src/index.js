@@ -12,9 +12,13 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import About from "./componets/Pages/About";
+import Blogs from "./componets/Pages/Blogs";
+import ReadBlog from "./componets/Pages/ReadBlog";
+import Project from "./componets/Pages/Project";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export const ApiBaseURL = "https://sudharshankakde.pythonanywhere.com/";
+export const MediaUrl = "https://sudharshankakde.pythonanywhere.com/DataBase/";
 // const router = createBrowserRouter([
 //   {
 //     path: "/",
@@ -25,13 +29,18 @@ export const ApiBaseURL = "https://sudharshankakde.pythonanywhere.com/";
 //     ],
 //   },
 // ]);
+
+
+
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="" element={<Home />}></Route>
+    <Route path="/" element={<App />} >
+      <Route path="" element={<Home />} ></Route>
+      <Route path="blog" element={<Blogs />}></Route>
+      <Route path="blog/:slug" element={<ReadBlog />}></Route>
       <Route path="about" element={<About />}></Route>
       <Route path="contact" element={<Contact />}></Route>
-      <Route path="Project/:Slug" element={<Contact />}></Route>
+      <Route path="project" element={<Project />}></Route>
     </Route>
   )
 );
