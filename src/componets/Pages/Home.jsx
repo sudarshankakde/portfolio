@@ -45,8 +45,8 @@ export default function Home() {
   });
 
   useEffect(() => {
+    window.scrollTo(0,0);
     document.title = "Sudarshan Kakde";
-
     const t1 = gsap.timeline({
       onComplete: () => {},
     });
@@ -59,7 +59,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div data-scroll-section >
+    <div   >
       {/* hero */}
       <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  ">
         <Background />

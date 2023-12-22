@@ -5,13 +5,15 @@ import TallyForm from "../TallyForm";
 
 function About() {
   useEffect(() => {
+    window.scrollTo(0,0);
+
     document.title = "About Me";
   }, []);
 
   let p = `md:text-lg  font-semibold  tracking-tight md:opacity-80  opacity-90 text-base flex flex-col justify-center items-center   text-justify  h-full md:cursor-auto`;
   let h3 = `md:text-5xl text-4xl font-bold md:opacity-80  opacity-90 text-start my-2`;
   return (
-    <div className="mb-24  text-center min-h-[100vh]" data-scroll-section >
+    <div className="mb-24  text-center min-h-[100vh]"   >
       <Background />
       <div className="md:min-h-[65vh] min-h-[75vh]">
         <AboutMeCard

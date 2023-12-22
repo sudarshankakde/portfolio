@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { ApiBaseURL, MediaUrl } from "../..";
 import { TailSpin } from "react-loader-spinner";
@@ -26,7 +26,10 @@ function ReadBlog() {
         });
     },
   });
+  useEffect(()=>{
+    window.scrollTo(0,0);
 
+  },[])
   const [spinner, setSpinner] = useState(false);
   const [response, setresponse] = useState("");
   const [email, setEmail] = useState("");
@@ -61,7 +64,7 @@ function ReadBlog() {
   const [body, setBody] = useState("");
 
   return (
-    <div data-scroll-section >
+    <div   >
       <ScrollIndicator color="#9676ce" />
       <div className="flex flex-col  md:w-[60%] w-[90%] mx-auto pt-0">
         <div className="flex flex-row flex-wrap gap-2 items-center font-bold md:mt-5">

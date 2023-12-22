@@ -20,12 +20,13 @@ function Blogs() {
   });
 
   useEffect(() => {
+    window.scrollTo(0,0);
     document.title = "Blogs";
   }, []);
 
   return (
     <>
-      <div className="flex flex-col  w-[90%] mx-auto" data-scroll-section>
+      <div className="flex flex-col  w-[90%] mx-auto"  >
         <div className="flex flex-col justify-center items-center text-purewhite  md:pt-10 pt-0 relative">
           <h2 className="md:text-6xl  text-5xl capitalize font-semibold text-center from-[#9676ce] to-[#7d57c1] bg-gradient-to-r px-5 py-3  p-2 rounded-lg w-fit tracking-tight">
             intricate

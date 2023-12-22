@@ -86,3 +86,36 @@ html.has-scroll-dragging {
   right: auto;
   bottom: 0;
 }
+
+/* width */
+::-webkit-scrollbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: transparent;
+
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #dadada70;
+  opacity: 0.5;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--complementary);
+  opacity: 0.5;
+  
+}

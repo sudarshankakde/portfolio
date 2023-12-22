@@ -7,7 +7,6 @@ import TallyForm from "../TallyForm";
 import { useQuery } from "@tanstack/react-query";
 
 function Project() {
-  // const [projects, setProjects] = useState([]);
   const { isLoading, isError, data } = useQuery({
     queryKey: "Projects",
     queryFn: () => {
@@ -21,14 +20,15 @@ function Project() {
     },
   });
   useEffect(() => {
+    window.scrollTo(0,0);
     document.title = "Projects";
   }, []);
 
   return (
-    <div data-scroll-section >
+    <div   >
       <div
         className="flex flex-col  items-center justify-center w-full  mb-36"
-        data-scroll
+        
       >
         <Background />
         <div className=" flex flex-col justify-center items-center gap-y-10 z-10">
