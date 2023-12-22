@@ -50,7 +50,7 @@ function Loader() {
         opacity: 1,
         stagger: 0.15,
         ease: Expo.easeInOut,
-        duration: 0.7,
+        duration: 0.5,
       })
       .to(".follow,.loaderContainer", {
         top: "0",
