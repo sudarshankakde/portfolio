@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.8460d273.css",
+    "main.js": "/static/js/main.0370a1b8.js",
+    "static/js/787.7da95b79.chunk.js": "/static/js/787.7da95b79.chunk.js",
+    "static/media/TiltPrism.ttf": "/static/media/TiltPrism.a39a32398249debc0671.ttf",
+    "static/media/Kalnia.ttf": "/static/media/Kalnia.ea93935ecef30006ea44.ttf",
+    "static/media/PixelifySans.ttf": "/static/media/PixelifySans.088d140132e39b3c37a8.ttf",
+    "static/media/gradient.svg": "/static/media/gradient.1e6a049e923a5c4efe00b0bba5989dbf.svg",
+    "index.html": "/index.html",
+    "static/media/socials.svg": "/static/media/socials.9feb8f5d89f119a620b80894b5f31b93.svg",
+    "static/media/contact.svg": "/static/media/contact.79bf0c397d07ebda3599e02044f111f5.svg",
+    "static/media/menu.svg": "/static/media/menu.fe58b491941e9bf8bdcf60a86075667c.svg",
+    "static/media/project.svg": "/static/media/project.1fd33b3c8f8b23f102e709dfe62caaf4.svg",
+    "main.8460d273.css.map": "/static/css/main.8460d273.css.map",
+    "main.0370a1b8.js.map": "/static/js/main.0370a1b8.js.map",
+    "787.7da95b79.chunk.js.map": "/static/js/787.7da95b79.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8460d273.css",
+    "static/js/main.0370a1b8.js"
+  ]
+}
