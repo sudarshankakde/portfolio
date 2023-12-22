@@ -14,7 +14,7 @@ function Loader() {
           ? counter + 1
           : (clearInterval(count), setCounter(100), reveal())
       );
-    }, 25);
+    }, 50);
   }, []);
   const reveal = () => {
     const timeline = gsap.timeline({
@@ -26,23 +26,31 @@ function Loader() {
       .to(".follow", {
         width: "100%",
         ease: Expo.easeInOut,
-        duration: 1.2,
-        delay: 0.7,
+        duration: 1.3,
+        delay: 0.4,
       })
       .to(".hide", {
         opacity: 0,
-        duration: 0.3,
+        duration: 0.2,
       })
       .to(".hide", {
         display: "none",
-        duration: 0.3,
+        duration: 0.2,
       })
       .to(".follow", {
         height: "100%",
         bottom: "0",
         duration: 0.7,
-        delay: 0.5,
+        delay: 0.4,
         ease: Expo.easeInOut,
+      })
+      .to(".content", { width: "100%", ease: Expo.easeInOut, duration: 0.4 })
+      .to(".title-lines", { display: "block", duration: 0.1 })
+      .to(".title-lines", {
+        opacity: 1,
+        stagger: 0.15,
+        ease: Expo.easeInOut,
+        duration: 0.7,
       })
       .to(".follow,.loaderContainer", {
         top: "0",
@@ -79,6 +87,13 @@ function Loader() {
           {counter}%
         </Count>
       </Loading>
+      <Content className="content  gap-4">
+        <p className="title-lines font-Kalnia md:text-[104px] text-6xl ">Sudarshan</p>
+        <p className="title-lines font-Kalnia md:text-[104px] text-6xl ">Kakde</p>
+        <p className="title-lines font-Kalnia md:text-[46px]  text-3xl tracking-widest my-10">
+          -Freelancer-
+        </p>
+      </Content>
     </AppContainer>
   );
 }
@@ -100,12 +115,13 @@ const Loading = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
+  
   top: 0;
 `;
 const Follow = styled.div`
   position: absolute;
   background-color: #aed2ff;
-  height: 2px;
+  height: 4px;
   width: 0;
   left: 0;
   z-index: 2;
@@ -115,8 +131,8 @@ const Follow = styled.div`
 const ProgressBar = styled.div`
   position: absolute;
   left: 0;
-  background-color: #fff;
-  height: 2px;
+  background-color: #dadada86;
+  height: 4px;
   width: 0;
   transition: 0.4s ease-out;
   bottom: 10vh;
@@ -128,4 +144,32 @@ const Count = styled.p`
   transform: translateY(-15px);
   font-weight: 500;
   right: 5vw;
+`;
+
+const Content = styled.div`
+  height: 100%;
+  width: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: transparent;
+  padding: auto;
+  z-index:99;
+
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  color: #0b021a;
+
+  p {
+    text-align: center;
+
+    opacity: 0;
+    display: none;
+    font-weight: 500;
+    margin: 0;
+  }
 `;

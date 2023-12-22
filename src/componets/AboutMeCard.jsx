@@ -2,6 +2,7 @@ import { React, useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 export default function AboutMeCard(props) {
   const storylyRef = useRef();
+ 
   useLayoutEffect(() => {
     storylyRef.current.init({
       layout: "modern",

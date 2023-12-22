@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ApiBaseURL } from "../..";
 import Background from "../Background";
 import WorkSnippetCard from "../WorkSnippetCard";
 import { TailSpin } from "react-loader-spinner";
 import TallyForm from "../TallyForm";
+import { useQuery } from "@tanstack/react-query";
 
 function Project() {
-  const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = useState([]);
+  const { isLoading, isError, data } = useQuery({
+    queryKey: "Projects",
+    queryFn: () => {
+      return fetch(`${ApiBaseURL}api/projects`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          return data;
+        });
+    },
+  });
   useEffect(() => {
-    window.scrollTo(0, 0);
     document.title = "Projects";
-    fetch(`${ApiBaseURL}api/projects?size=4`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProjects(data.data);
-      });
   }, []);
 
-  
-  
   return (
-    <>
+    <div data-scroll-section >
       <div
         className="flex flex-col  items-center justify-center w-full  mb-36"
         data-scroll
@@ -36,19 +39,17 @@ function Project() {
             </p>
           </div>
           <div className="flex flex-row flex-wrap justify-center items-center gap-x-10 gap-y-10 ">
-            {projects.length !== 0 ? (
-              projects.map((project, index) => {
+            {!isLoading ? (
+              data?.data.map((project, index) => {
                 return (
-                  <>
-                    <WorkSnippetCard
-                      key={index}
-                      Thumbnail={project.Thumbnail}
-                      title={project.name}
-                      link={project.link}
-                      skills={project.skills}
-                      projectType={project.projectType}
-                    />
-                  </>
+                  <WorkSnippetCard
+                    key={index}
+                    Thumbnail={project.Thumbnail}
+                    title={project.name}
+                    link={project.link}
+                    skills={project.skills}
+                    projectType={project.projectType}
+                  />
                 );
               })
             ) : (
@@ -65,13 +66,20 @@ function Project() {
                 />
               </div>
             )}
+            {isError ? (
+              <p className="font-[400] tracking-tight text-center mb-5 mt-3  opacity-90 px-2   text-lg">
+                Some Thing Interrupt While Loading My Crafted
+              </p>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="md:py-40 py-20"></div>
-        <TallyForm/>
+        <TallyForm />
       </div>
       <div></div>
-    </>
+    </div>
   );
 }
 

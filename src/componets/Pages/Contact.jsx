@@ -6,7 +6,6 @@ import qs from "qs";
 import { TailSpin } from "react-loader-spinner";
 function Contact() {
   useEffect(() => {
-    window.scrollTo(0, 0);
     document.title = "Contact Me";
   }, []);
   let [responseData, setresponse] = useState("");
@@ -46,7 +45,7 @@ function Contact() {
 
   return (
     <>
-      <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  ">
+      <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  " data-scroll-section >
         <Background />
         <div className=" flex flex-col justify-center items-center gap-y-3 z-10">
           <h2 className="md:text-6xl text-5xl font-Kalnia">Contact Me</h2>
@@ -58,13 +57,13 @@ function Contact() {
             <div class="flex flex-col">
               <label
                 className="text-white text-xs tracking-widest font-medium uppercase"
-                htmlFor="username"
+                htmlFor="name"
               >
-                Username
+                Name
               </label>
               <input
-                className="w-full mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 rounded-full shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
-                id="username"
+                className=" mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300  shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
+                id="name"
                 name="name"
                 type="text"
                 placeholder=""
@@ -79,7 +78,7 @@ function Contact() {
                 Email
               </label>
               <input
-                className="w-full mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 rounded-full shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
+                className=" mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300  shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
                 id="email"
                 name="email"
                 type="email"
@@ -95,7 +94,7 @@ function Contact() {
                 Message
               </label>
               <textarea
-                className="w-full mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 rounded-full shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
+                className=" mt-2 pl-5 w-[300px] md:w-[500px] py-2 text-white bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300  shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20"
                 name="message"
                 id="message"
                 about="Message"
@@ -104,7 +103,7 @@ function Contact() {
             </div>
             <button
               type="submit"
-              className=" w-full mt-2 pl-5 w-[300px] md:w-[500px] py-3 text-white text-start bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 rounded-full shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20 flex flex-row  items-center gap-x-2 group"
+              className="  mt-2 pl-5 w-[300px] md:w-[500px] py-3 text-white text-start bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 l shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20 flex flex-row  items-center gap-x-2 group"
             >
               {spinner ? (
                 <TailSpin

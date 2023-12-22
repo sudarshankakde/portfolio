@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import React, {  useState } from "react";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { ApiBaseURL, MediaUrl } from "../..";
 import { TailSpin } from "react-loader-spinner";
 import parse from "html-react-parser";
 import axios from "axios";
 import ScrollIndicator from "../ScrollIndicator";
+import { useQuery } from "@tanstack/react-query";
 function ReadBlog() {
   let { slug } = useParams();
   console.log(slug);
-  function getBlog(slug) {
-    window.scrollTo(0, 0);
-    fetch(`${ApiBaseURL}api/detail/${slug}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        document.title = data.data[0].title;
-        console.log(data.data[0]);
-        setBlogs(data.data[0]);
-        setRelated(data.related);
-        setBody(data.data[0].body);
-      });
-  }
-  useEffect(() => {
-    getBlog(slug);
-  }, [slug]);
+  const { isLoading } = useQuery({
+    queryKey: ["Read-Blog", slug],
+    queryFn: () => {
+      return fetch(`${ApiBaseURL}api/detail/${slug}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          document.title = data.data[0].title;
+          setBlogs(data.data[0]);
+          setRelated(data.related);
+          setBody(data.data[0].body);
+
+          return data;
+        });
+    },
+  });
 
   const [spinner, setSpinner] = useState(false);
   const [response, setresponse] = useState("");
@@ -60,10 +61,10 @@ function ReadBlog() {
   const [body, setBody] = useState("");
 
   return (
-    <>
+    <div data-scroll-section >
       <ScrollIndicator color="#9676ce" />
       <div className="flex flex-col  md:w-[60%] w-[90%] mx-auto pt-0">
-        <div className="flex flex-row flex-wrap gap-2 items-center font-bold">
+        <div className="flex flex-row flex-wrap gap-2 items-center font-bold md:mt-5">
           <NavLink
             to="/blog"
             className="hover:text-[var(--complementary)] gap-1 flex items-center"
@@ -82,10 +83,10 @@ function ReadBlog() {
             <span className="">Blogs</span>
           </NavLink>
           <span>/</span>
-          <span>{blog && blog.title}</span>
+          <span>{!isLoading && blog.title}</span>
         </div>
         <>
-          {blog.length !== 0 ? (
+          {!isLoading ? (
             <></>
           ) : (
             <div className="h-[65vh] flex justify-center items-center">
@@ -119,18 +120,14 @@ function ReadBlog() {
           <h4 className="text-4xl font-semibold tracking-tight w-[100%] text-start">
             Related Post
           </h4>
-          <div className="flex flex-row justify-center items-baseline  gap-5 ">
+          <div className="flex md:flex-row flex-col justify-center items-baseline  gap-5 ">
             {related &&
               related.map((related, index) => {
                 return (
-                  <>
+                  <Link to={`/blog/${related.slug}`}>
                     <div
                       className="w-fit flex flex-col justify-center items-center my-5"
                       key={index}
-                      onClick={() => {
-                        slug = related.slug;
-                        getBlog(slug);
-                      }}
                     >
                       <img
                         src={MediaUrl + related.image}
@@ -145,13 +142,13 @@ function ReadBlog() {
                         {related.title}
                       </div>
                     </div>
-                  </>
+                  </Link>
                 );
               })}
           </div>
         </div>
         <div className="flex flex-col justify-center items-center  py-20 mb-10">
-          <p className="text-3xl tracking-tight font-semibold">
+          <p className="text-3xl tracking-wide font-bold">
             Subscribe to the Newsletter!
           </p>
           <div className="my-2">
@@ -213,7 +210,7 @@ function ReadBlog() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

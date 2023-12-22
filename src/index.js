@@ -15,6 +15,7 @@ import About from "./componets/Pages/About";
 import Blogs from "./componets/Pages/Blogs";
 import ReadBlog from "./componets/Pages/ReadBlog";
 import Project from "./componets/Pages/Project";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export const ApiBaseURL = "https://sudharshankakde.pythonanywhere.com/";

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import StackItem from "../StackItem";
+import React, { useEffect, useState } from "react";
 import Stack from "../Stack";
 import WorkSnippetCard from "../WorkSnippetCard";
 import AboutMeCard from "../AboutMeCard";
@@ -8,12 +7,44 @@ import { NavLink } from "react-router-dom";
 import { ApiBaseURL } from "../..";
 import { gsap, CSSPlugin, Expo } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useQuery } from "@tanstack/react-query";
+import { TailSpin } from "react-loader-spinner";
+
 gsap.registerPlugin(CSSPlugin, ScrollTrigger);
 
 export default function Home() {
-  const portfolio = useRef(null);
+  // projects load
+  const [projects, setProjects] = useState([]);
+  const projectsQuery = useQuery({
+    queryKey: "Projects",
+    queryFn: () => {
+      return fetch(`${ApiBaseURL}api/projects`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setProjects(data.data);
+          return data;
+        });
+    },
+  });
+  // stack Load
+  const [stack, setStack] = useState([]);
+  const stackQuery = useQuery({
+    queryKey: "Stack",
+    queryFn: () => {
+      return fetch(`${ApiBaseURL}api/stack`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setStack(data.data);
+          return data;
+        });
+    },
+  });
+
   useEffect(() => {
-    window.scrollTo(0, 0);
     document.title = "Sudarshan Kakde";
 
     const t1 = gsap.timeline({
@@ -25,49 +56,10 @@ export default function Home() {
       ease: Expo.easeInOut,
       duration: 0.6,
     });
-    const portfolioRef = portfolio.current;
-  
-    // gsap.fromTo(
-    //   ".SubHeadText",
-    //   {
-    //     x: "-150px",
-    //   },
-    //   {
-    //     x: "0",
-    //     scrollTrigger: {
-    //       trigger: ".SubHeadText",
-    //       star: "top 40%",
-    //       scrub: 2,
-    //     },
-    //   }
-    // );
   }, []);
 
-  // projects load
-  const [projects, setProjects] = useState([]);
-  useEffect(() => {
-    fetch(`${ApiBaseURL}api/projects?size=4`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setProjects(data.data);
-      });
-  }, []);
-
-  // stack Load
-  const [stack, setStack] = useState([]);
-  useEffect(() => {
-    fetch(`${ApiBaseURL}api/stack`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setStack(data.data);
-      });
-  }, []);
   return (
-    <>
+    <div data-scroll-section >
       {/* hero */}
       <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  ">
         <Background />
@@ -186,22 +178,34 @@ export default function Home() {
         <div
           className="flex flex-row flex-wrap justify-center items-center gap-x-7 gap-y-10  "
           id="portfolio"
-          ref={portfolio}
         >
-          {Array.isArray(projects)
-            ? projects.map((project, index) => {
-                return (
-                  <WorkSnippetCard
-                    key={index}
-                    Thumbnail={project.Thumbnail}
-                    title={project.name}
-                    link={project.link}
-                    skills={project.skills}
-                    projectType={project.projectType}
-                  />
-                );
-              })
-            : console.log("projects is not an array", projects)}
+          {!projectsQuery.isLoading ? (
+            projects.slice(0, 4).map((project, index) => {
+              return (
+                <WorkSnippetCard
+                  key={index}
+                  Thumbnail={project.Thumbnail}
+                  title={project.name}
+                  link={project.link}
+                  skills={project.skills}
+                  projectType={project.projectType}
+                />
+              );
+            })
+          ) : (
+            <>
+              <TailSpin
+                height="36"
+                width="36"
+                color="#aed2ff"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            </>
+          )}
         </div>
         <NavLink
           to="project"
@@ -247,7 +251,20 @@ export default function Home() {
       </div>
       {/* stack */}
       <div className="flex flex-col items-center justify-start w-full z-10   min-h-auto my-24">
-        <Stack stack={stack} />
+        {!stackQuery.isLoading ? (
+          <Stack stack={stack} />
+        ) : (
+          <TailSpin
+            height="36"
+            width="36"
+            color="#aed2ff"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        )}
       </div>
 
       {/* About Me */}
@@ -265,6 +282,6 @@ export default function Home() {
           More about me
         </NavLink>
       </div>
-    </>
+    </div>
   );
 }

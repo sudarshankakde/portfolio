@@ -5,8 +5,8 @@ const ProgressContainer = styled.div`
   width: 100%;
   height: 4px;
   background: #dadada84;
-  position: fixed;
-  top: 0;
+  position: fixed!important;
+  top: 0!important;
   z-index: 1;
 `;
 const ProgressBar = styled.div`
@@ -33,7 +33,7 @@ const ScrollIndicator = ({ color, showText }) => {
   }, []);
 
   return (
-    <ProgressContainer>
+    <ProgressContainer className="md:hidden">
       <ProgressBar width={progressWidth} color={color}>
         {showText && (
           <ProgressText width={progressWidth}>{`${Math.round(
