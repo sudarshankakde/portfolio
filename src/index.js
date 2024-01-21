@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Home from "./componets/Pages/Home";
 import Contact from "./componets/Pages/Contact";
+import NotFound404 from "./componets/Pages/NotFound404";
 import {
   Route,
   RouterProvider,
@@ -41,7 +42,8 @@ const router = createBrowserRouter(
       <Route path="blog/:slug" element={<ReadBlog />}></Route>
       <Route path="about" element={<About />}></Route>
       <Route path="contact" element={<Contact />}></Route>
-      <Route path="project" element={<Project />}></Route>
+      <Route path="project" element={<Project />}></Route> 
+      <Route path="*" element={<NotFound404 />}></Route> 
     </Route>
   )
 );

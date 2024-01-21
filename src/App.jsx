@@ -12,7 +12,6 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Loader />
         <Navbar />
-
         <Outlet />
         <Footer />
       </QueryClientProvider>
