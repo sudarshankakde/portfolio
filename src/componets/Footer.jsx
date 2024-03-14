@@ -4,7 +4,8 @@ import { NavListItems } from "./Navbar";
 const footerLinks = [
   ...NavListItems,
   { title: "Blog", link: "blog" },
-  { title: "about", link: "about" },
+  { title: "about", link: "about" }, 
+  { title: "resume", link: "resume" }, 
 ];
 
 function Footer() {

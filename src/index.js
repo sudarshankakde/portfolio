@@ -16,6 +16,7 @@ import About from "./componets/Pages/About";
 import Blogs from "./componets/Pages/Blogs";
 import ReadBlog from "./componets/Pages/ReadBlog";
 import Project from "./componets/Pages/Project";
+import Resume from "./componets/Pages/Resume";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
       <Route path="about" element={<About />}></Route>
       <Route path="contact" element={<Contact />}></Route>
       <Route path="project" element={<Project />}></Route> 
+      <Route path="resume" element={<Resume />}></Route> 
       <Route path="*" element={<NotFound404 />}></Route> 
     </Route>
   )
