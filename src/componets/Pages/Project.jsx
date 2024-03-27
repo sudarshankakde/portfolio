@@ -20,7 +20,6 @@ function Project() {
     },
   });
   useEffect(() => {
-    window.scrollTo(0,0);
     document.title = "Projects";
   }, []);
 

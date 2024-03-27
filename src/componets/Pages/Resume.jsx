@@ -1,20 +1,27 @@
-import React, { useEffect } from "react";
-import { MediaUrl } from "../..";
+import React from "react";
+
 
 function Resume() {
-  const pdfUrl = `${MediaUrl}Sudarshan_Kakde_CV.pdf`;
-    useEffect(() => {
-      setTimeout(() => {
-        document.getElementById("link").click();
-      },3000)
-    }, [pdfUrl]);
+
 
   return (
     <>
-      <div className="w-full h-[75vh] flex justify-center items-center text-3xl uppercase">
-        Opening Resume in new tab...
+        <div className="flex flex-col justify-center items-center  gap-y-3 my-7">
+          <h2 className="md:text-6xl text-5xl font-Kalnia uppercase">My resume</h2>
+          <p className="md:text-lg tracking-widest font-semibold opacity-75 capitalize">
+            You Can Hire Me Now!
+          </p>
+        </div>
+      <div className="md:w-[60vw] w-[90vw]  p-2 rounded-lg mx-auto min-h-screen my-10  border border-[#303034]">
+        <iframe
+          title="resume"
+          src="https://drive.google.com/file/d/17JH05Z5jXbh-La02dURaapPejdVpN94O/preview"
+          className="h-screen w-full"
+          allow="autoplay"
+        >
+          {" "}
+        </iframe>
       </div>
-      <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="hidden" id="link">resume</a>
     </>
   );
 }
