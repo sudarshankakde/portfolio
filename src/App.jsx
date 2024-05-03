@@ -6,14 +6,15 @@ import Footer from "./componets/Footer";
 import Loader from ".././src/componets/Loader";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import ScrollToTop from "./componets/ScrollToTop";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 function App() {
   return (
     <div className="">
       <QueryClientProvider client={queryClient}>
-    <ScrollToTop />
-
+        <Analytics />
+        <ScrollToTop />
         <Loader />
         <Navbar />
         <Outlet />
