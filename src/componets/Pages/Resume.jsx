@@ -15,7 +15,7 @@ function Resume() {
       <div className="md:w-[60vw] w-[90vw]  p-2 rounded-lg mx-auto min-h-screen my-10  border border-[#303034]">
         <iframe
           title="resume"
-          src="https://drive.google.com/file/d/17JH05Z5jXbh-La02dURaapPejdVpN94O/preview"
+          src="https://drive.google.com/file/d/1qoKrgNFMk3Ay-Rh9mAQJv7kRqxehpMm0/view"
           className="h-screen w-full"
           allow="autoplay"
         >
