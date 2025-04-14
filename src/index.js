@@ -17,7 +17,7 @@ import Blogs from "./componets/Pages/Blogs";
 import ReadBlog from "./componets/Pages/ReadBlog";
 import Project from "./componets/Pages/Project";
 import Resume from "./componets/Pages/Resume";
-
+import Experience from "./componets/Pages/Experience";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export const ApiBaseURL = "https://sudharshankakde.pythonanywhere.com/";
@@ -43,9 +43,10 @@ const router = createBrowserRouter(
       <Route path="blog/:slug" element={<ReadBlog />}></Route>
       <Route path="about" element={<About />}></Route>
       <Route path="contact" element={<Contact />}></Route>
-      <Route path="project" element={<Project />}></Route> 
-      <Route path="resume" element={<Resume />}></Route> 
-      <Route path="*" element={<NotFound404 />}></Route> 
+      <Route path="project" element={<Project />}></Route>
+      <Route path="resume" element={<Resume />}></Route>
+      <Route path="experience" element={<Experience />}></Route>
+      <Route path="*" element={<NotFound404 />}></Route>
     </Route>
   )
 );

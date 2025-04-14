@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import projectSvg from "../../src/assets/Images/svg/project.svg";
 import socialsSvg from "../../src/assets/Images/svg/socials.svg";
 import contactSvg from "../../src/assets/Images/svg/contact.svg";
+import experinceSvg from "../../src/assets/Images/svg/Experince.svg";
 import menuSvg from "../../src/assets/Images/svg/menu.svg";
 import Headroom from "react-headroom";
 
@@ -11,6 +12,11 @@ export const NavListItems = [
     title: "project",
     link: "project",
     svg: projectSvg,
+  },
+  {
+    title: "Experince",
+    link: "experience",
+    svg: experinceSvg,
   },
   {
     title: "socials",
