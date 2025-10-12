@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Stack from "../Stack";
 import WorkSnippetCard from "../WorkSnippetCard";
 import AboutMeCard from "../AboutMeCard";
+import { PageSeo } from "../Seo";
 import Background from "../Background";
 import { NavLink } from "react-router-dom";
 import { ApiBaseURL } from "../..";
@@ -59,7 +60,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div   >
+    <div data-scroll-section >
+      <PageSeo
+        title="Home"
+        description="Hi, I'm Sudarshan — a Full Stack Developer crafting web and cross-platform experiences. Explore my projects, blog and contact me for freelance work."
+      />
       {/* hero */}
       <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  ">
         <Background />

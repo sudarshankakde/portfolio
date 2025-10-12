@@ -4,6 +4,7 @@ import axios from "axios";
 import { ApiBaseURL } from "../..";
 import qs from "qs";
 import { TailSpin } from "react-loader-spinner";
+import { PageSeo } from "../Seo";
 function Contact() {
   useEffect(() => {
     window.scrollTo(0,0);
@@ -46,6 +47,7 @@ function Contact() {
 
   return (
     <>
+      <PageSeo title="Contact" description="Get in touch with Sudarshan for freelance, collaboration or hiring." />
       <div className="flex flex-col h-[80vh]  md:h-screen items-center justify-center w-full  "   >
         <Background />
         <div className=" flex flex-col justify-center items-center gap-y-3 z-10">

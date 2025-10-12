@@ -4,6 +4,14 @@ import { ApiBaseURL, MediaUrl } from "../..";
 import { NavLink } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner";
 import { useQuery } from "@tanstack/react-query";
+import { PageSeo } from "../Seo";
+
+const siteOrgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Sudarshan Kakde - Intricate",
+  url: "https://sudarshankakde.live/blog",
+};
 function Blogs() {
   const { isLoading, data, isError } = useQuery({
     queryKey: "blogs",
@@ -26,6 +34,9 @@ function Blogs() {
 
   return (
     <>
+      <PageSeo title="Blog" description="Intricate — Articles and thoughts by Sudarshan on development, design and more." >
+        <script type="application/ld+json">{JSON.stringify(siteOrgJsonLd)}</script>
+      </PageSeo>
       <div className="flex flex-col  w-[90%] mx-auto"  >
         <div className="flex flex-col justify-center items-center text-purewhite  md:pt-10 pt-0 relative">
           <h2 className="md:text-6xl  text-5xl capitalize font-semibold text-center from-[#9676ce] to-[#7d57c1] bg-gradient-to-r px-5 py-3  p-2 rounded-lg w-fit tracking-tight">

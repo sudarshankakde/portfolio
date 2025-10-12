@@ -1,10 +1,12 @@
 import React from 'react'
-import img from '../../assets/Images/page-404-cartoon-astronaut-ufo-and-space-planets-vector.jpg'
+
 import { NavLink } from 'react-router-dom'
+import { PageSeo } from "../Seo";
 
 function NotFound404() {
   return (
     <div className='min-h-[75vh] flex flex-col justify-center items-center gap-5'>
+      <PageSeo title="404 - Page not found" description="The page you are looking for cannot be found." />
         <div className="">
         <h2 className='md:text-9xl text-5xl font-Kalnia select-none text-center'>404</h2>
         <p className='md:text-2xl font-mono text-center'>Page not Found</p>

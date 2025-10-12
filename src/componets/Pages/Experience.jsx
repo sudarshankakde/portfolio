@@ -7,6 +7,8 @@ import StatsCounter from "../StatsCounter";
 import { TailSpin } from "react-loader-spinner";
 import { useQuery } from "@tanstack/react-query";
 import { ApiBaseURL } from "../..";
+import { PageSeo } from "../Seo";
+import { useMemo } from "react";
 
 gsap.registerPlugin(CSSPlugin, ScrollTrigger);
 
@@ -22,7 +24,7 @@ export default function Experience() {
     },
   });
 
-  const experiences = data?.data || [];
+  const experiences = useMemo(() => data?.data || [], [data]);
   const experienceStats = data?.stats
     ? Object.entries(data.stats).map(([label, value]) => ({ label, value }))
     : [
@@ -59,6 +61,7 @@ export default function Experience() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <PageSeo title="Experience" description="Professional experience, roles and projects by Sudarshan Kakde." />
       <Background />
       <div className="my-10 flex flex-col justify-center items-center gap-y-3">
         <div className="flex flex-col justify-center items-center gap-y-3">

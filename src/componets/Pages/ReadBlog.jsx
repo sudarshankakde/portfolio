@@ -6,6 +6,7 @@ import parse from "html-react-parser";
 import axios from "axios";
 import ScrollIndicator from "../ScrollIndicator";
 import { useQuery } from "@tanstack/react-query";
+import { PageSeo } from "../Seo";
 function ReadBlog() {
   let { slug } = useParams();
   console.log(slug);
@@ -65,6 +66,35 @@ function ReadBlog() {
 
   return (
     <div   >
+      {!isLoading && blog && blog.title ? (
+        <PageSeo
+          title={blog.title}
+          description={blog.summary || blog.excerpt || blog.title}
+          image={MediaUrl + blog.image}
+          url={`https://sudarshankakde.live/blog/${blog.slug}`}
+        >
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: blog.title,
+              image: [MediaUrl + blog.image],
+              author: {
+                "@type": "Person",
+                name: "Sudarshan Kakde",
+              },
+              datePublished: blog.publish_date,
+              description: blog.summary,
+              mainEntityOfPage: {
+                "@type": "WebPage",
+                "@id": `https://sudarshankakde.live/blog/${blog.slug}`,
+              },
+            })}
+          </script>
+        </PageSeo>
+      ) : (
+        <></>
+      )}
       <ScrollIndicator color="#9676ce" />
       <div className="flex flex-col  md:w-[60%] w-[90%] mx-auto pt-0">
         <div className="flex flex-row flex-wrap gap-2 items-center font-bold md:mt-5">

@@ -14,7 +14,7 @@ export const NavListItems = [
     svg: projectSvg,
   },
   {
-    title: "Experince",
+    title: "EXPERIENCE",
     link: "experience",
     svg: experinceSvg,
   },

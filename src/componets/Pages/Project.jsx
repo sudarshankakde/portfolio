@@ -5,6 +5,7 @@ import WorkSnippetCard from "../WorkSnippetCard";
 import { TailSpin } from "react-loader-spinner";
 import TallyForm from "../TallyForm";
 import { useQuery } from "@tanstack/react-query";
+import { PageSeo } from "../Seo";
 
 function Project() {
   const { isLoading, isError, data } = useQuery({
@@ -25,6 +26,7 @@ function Project() {
 
   return (
     <div   >
+      <PageSeo title="Projects" description="A showcase of projects crafted by Sudarshan — web, apps and experiments." />
       <div
         className="flex flex-col  items-center justify-center w-full  mb-36"
         

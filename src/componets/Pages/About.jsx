@@ -2,6 +2,19 @@ import React, { useEffect} from "react";
 import AboutMeCard from "../AboutMeCard";
 import Background from "../Background";
 import TallyForm from "../TallyForm";
+import { PageSeo } from "../Seo";
+
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Sudarshan Kakde",
+  url: "https://sudarshankakde.live/",
+  sameAs: [
+    "https://github.com/sudarshankakde",
+    "https://www.linkedin.com/in/sudarshankakde/"
+  ],
+  jobTitle: "Full Stack Developer",
+};
 
 function About() {
   useEffect(() => {
@@ -14,6 +27,9 @@ function About() {
   let h3 = `md:text-5xl text-4xl font-bold md:opacity-80  opacity-90 text-start my-2`;
   return (
     <div className="mb-24  text-center min-h-[100vh]"   >
+      <PageSeo title="About" description="About Sudarshan Kakde — Full Stack Developer, UI/UX enthusiast and cross-platform app creator." >
+        <script type="application/ld+json">{JSON.stringify(siteJsonLd)}</script>
+      </PageSeo>
       <Background />
       <div className="md:min-h-[65vh] min-h-[75vh]">
         <AboutMeCard

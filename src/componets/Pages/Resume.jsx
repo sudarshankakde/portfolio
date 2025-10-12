@@ -1,4 +1,5 @@
 import React from "react";
+import { PageSeo } from "../Seo";
 
 
 function Resume() {
@@ -6,6 +7,7 @@ function Resume() {
 
   return (
     <>
+      <PageSeo title="Resume" description="Resume of Sudarshan Kakde — Full Stack Developer." />
         <div className="flex flex-col justify-center items-center  gap-y-3 my-7">
           <h2 className="md:text-6xl text-5xl font-Kalnia uppercase">My resume</h2>
           <p className="md:text-lg tracking-widest font-semibold opacity-75 capitalize">
