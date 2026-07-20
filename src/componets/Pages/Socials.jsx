@@ -183,34 +183,7 @@ export default function Socials() {
     };
   }, [lat, lng]);
 
-  // Query GitHub code frequency statistics for the portfolio repository
-  const { data: githubStats } = useQuery({
-    queryKey: ["GitHubCodeStats"],
-    queryFn: () => {
-      return fetch("https://api.github.com/repos/sudarshankakde/portfolio/stats/code_frequency")
-        .then((res) => {
-          if (!res.ok) throw new Error("API Limit or repo not found");
-          return res.json();
-        })
-        .then((data) => {
-          if (Array.isArray(data)) {
-            let totalAdditions = 0;
-            let totalDeletions = 0;
-            data.forEach(([time, add, del]) => {
-              totalAdditions += add;
-              totalDeletions += Math.abs(del);
-            });
-            const history = data.slice(-10);
-            return { totalAdditions, totalDeletions, history };
-          }
-          return null;
-        })
-        .catch(() => null);
-    },
-    staleTime: 1000 * 60 * 60,
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
+
 
   // Query overall GitHub Profile Statistics (Stars, Forks, Repos, Followers)
   const { data: githubProfile } = useQuery({
