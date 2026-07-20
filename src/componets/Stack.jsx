@@ -22,7 +22,7 @@ function Stack(props) {
                   <>
                     <li key={index}>
                       <img
-                        src={MediaUrl + tool.logo}
+                        src={tool.logo && (tool.logo.startsWith("http://") || tool.logo.startsWith("https://")) ? tool.logo : MediaUrl + tool.logo}
                         alt={tool.toolName}
                         className="w-10 h-10"
                       />
@@ -35,7 +35,7 @@ function Stack(props) {
                   <>
                     <li key={index} aria-hidden>
                       <img
-                        src={MediaUrl + tool.logo}
+                        src={tool.logo && (tool.logo.startsWith("http://") || tool.logo.startsWith("https://")) ? tool.logo : MediaUrl + tool.logo}
                         alt={tool.toolName}
                         className="w-10 h-10"
                       />

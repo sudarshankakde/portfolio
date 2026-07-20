@@ -8,7 +8,7 @@ export default function StackItem(props) {
         <div className="flex flex-row justify-start items-center gap-3  overflow-hidden md:w-96 w-[85vw] stackItem   px-5 py-2 rounded-lg  transition-all duration-500 ease-in-out ">
           <span>
             <img
-              src={MediaUrl + props.logo}
+              src={props.logo && (props.logo.startsWith("http://") || props.logo.startsWith("https://")) ? props.logo : MediaUrl + props.logo}
               alt=""
               className="h-16 w-16 rounded-lg"
             />

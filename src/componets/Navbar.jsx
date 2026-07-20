@@ -4,6 +4,7 @@ import projectSvg from "../../src/assets/Images/svg/project.svg";
 import socialsSvg from "../../src/assets/Images/svg/socials.svg";
 import contactSvg from "../../src/assets/Images/svg/contact.svg";
 import experinceSvg from "../../src/assets/Images/svg/Experince.svg";
+import blogSvg from "../../src/assets/Images/svg/blog.svg";
 import menuSvg from "../../src/assets/Images/svg/menu.svg";
 import Headroom from "react-headroom";
 
@@ -20,9 +21,13 @@ export const NavListItems = [
   },
   {
     title: "socials",
-    link: "https://bento.me/sudarshankakde",
-    target: "_blank",
+    link: "socials",
     svg: socialsSvg,
+  },
+  {
+    title: "blog",
+    link: "blog",
+    svg: blogSvg,
   },
   {
     title: "contact",
@@ -30,18 +35,19 @@ export const NavListItems = [
     svg: contactSvg,
   },
 ];
+
 export default function Navbar() {
   function showNavbar() {
     var navbarState = document.getElementById("togglebtn");
     var navbarSmall = document.getElementById("navbarSmall").classList;
     if (
-      navbarState.attributes.getNamedItem("data-navbarState").value === "hidden"
+      navbarState.attributes.getNamedItem("data-navbarstate").value === "hidden"
     ) {
       navbarSmall.replace("invisible", "visible");
-      navbarState.setAttribute("data-navbarState", "block");
+      navbarState.setAttribute("data-navbarstate", "block");
     } else {
       navbarSmall.replace("visible", "invisible");
-      navbarState.setAttribute("data-navbarState", "hidden");
+      navbarState.setAttribute("data-navbarstate", "hidden");
     }
   }
 
@@ -49,9 +55,9 @@ export default function Navbar() {
     <Headroom
       style={{
         zIndex: 999,
-        webkitTransition: "all .5s ease-in-out",
-        mozTransition: "all .5s ease-in-out",
-        oTransition: "all .5s ease-in-out",
+        WebkitTransition: "all .5s ease-in-out",
+        MozTransition: "all .5s ease-in-out",
+        OTransition: "all .5s ease-in-out",
         transition: "all .5s ease-in-out",
       }}
       onPin={() => {
@@ -73,7 +79,7 @@ export default function Navbar() {
             </NavLink>
             <button
               data-collapse-toggle="navbar-default"
-              data-navbarState="hidden"
+              data-navbarstate="hidden"
               id="togglebtn"
               type="button"
               className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden"
@@ -85,19 +91,17 @@ export default function Navbar() {
               <div className="uppercase flex flex-col p-4 md:p-0 mt-4  md:flex-row md:space-x-8 md:mt-0 ">
                 {NavListItems.map((element, index) => {
                   return (
-                    <>
-                      <NavLink
-                        to={element.link}
-                        key={index}
-                        target={element.target}
-                        className={() =>
-                          `z-[999] md:flex items-center justify-center hidden mr-2 font-[500] text-xs hover:text-white transition-all ease-in-out duration-300 tracking-wide  gap-1`
-                        }
-                      >
-                        <img src={element.svg} alt="Icon" />
-                        {element.title}
-                      </NavLink>
-                    </>
+                    <NavLink
+                      to={element.link}
+                      key={index}
+                      target={element.target}
+                      className={() =>
+                        `z-[999] md:flex items-center justify-center hidden mr-2 font-[500] text-xs hover:text-white transition-all ease-in-out duration-300 tracking-wide  gap-1`
+                      }
+                    >
+                      <img src={element.svg} alt="Icon" />
+                      {element.title}
+                    </NavLink>
                   );
                 })}
               </div>

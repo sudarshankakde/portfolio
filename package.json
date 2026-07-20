@@ -15,6 +15,7 @@
     "gsap": "^3.12.4",
     "gsap-trial": "^3.12.4",
     "html-react-parser": "^5.0.10",
+    "leaflet": "^1.9.4",
     "locomotive-scroll": "^4.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,7 +26,6 @@
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
     "sheryjs": "^1.0.0-beta.0.1.7",
-    "storyly-web": "^2.1.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -38,8 +38,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {

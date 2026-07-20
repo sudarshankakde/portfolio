@@ -3,7 +3,7 @@ import Background from "../Background";
 import axios from "axios";
 import { ApiBaseURL } from "../..";
 import qs from "qs";
-import { TailSpin } from "react-loader-spinner";
+import { ButtonDotsLoader } from "../SkeletonLoaders";
 import { PageSeo } from "../Seo";
 function Contact() {
   useEffect(() => {
@@ -109,16 +109,7 @@ function Contact() {
               className="  mt-2 pl-5 w-[300px] md:w-[500px] py-3 text-white text-start bg-purple rounded-md focus:outline-none focus:ring-1 focus:ring-[#816bac] focus:border-transparent transition-all   ease-in-out duration-300 l shadow-inner shadow-[var(--bg-purple-50)] border border-[#816bac] z-20 flex flex-row  items-center gap-x-2 group"
             >
               {spinner ? (
-                <TailSpin
-                  height="30"
-                  width="30"
-                  color="#aed2ff"
-                  ariaLabel="tail-spin-loading"
-                  radius="1"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                />
+                <ButtonDotsLoader />
               ) : (
                 <>
                   Submit

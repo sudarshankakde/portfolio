@@ -9,7 +9,7 @@ import { ApiBaseURL } from "../..";
 import { gsap, CSSPlugin, Expo } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useQuery } from "@tanstack/react-query";
-import { TailSpin } from "react-loader-spinner";
+import { ProjectCardSkeleton, StackSkeleton } from "../SkeletonLoaders";
 
 gsap.registerPlugin(CSSPlugin, ScrollTrigger);
 
@@ -17,7 +17,7 @@ export default function Home() {
   // projects load
   const [projects, setProjects] = useState([]);
   const projectsQuery = useQuery({
-    queryKey: "Projects",
+    queryKey: ["Projects"],
     queryFn: () => {
       return fetch(`${ApiBaseURL}api/projects`)
         .then((res) => {
@@ -32,7 +32,7 @@ export default function Home() {
   // stack Load
   const [stack, setStack] = useState([]);
   const stackQuery = useQuery({
-    queryKey: "Stack",
+    queryKey: ["Stack"],
     queryFn: () => {
       return fetch(`${ApiBaseURL}api/stack`)
         .then((res) => {
@@ -189,6 +189,8 @@ export default function Home() {
               return (
                 <WorkSnippetCard
                   key={index}
+                  slug={project.slug}
+                  has_case_study={project.has_case_study}
                   Thumbnail={project.Thumbnail}
                   title={project.name}
                   link={project.link}
@@ -199,16 +201,9 @@ export default function Home() {
             })
           ) : (
             <>
-              <TailSpin
-                height="36"
-                width="36"
-                color="#aed2ff"
-                ariaLabel="tail-spin-loading"
-                radius="1"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ProjectCardSkeleton key={i} />
+              ))}
             </>
           )}
         </div>
@@ -259,16 +254,7 @@ export default function Home() {
         {!stackQuery.isLoading ? (
           <Stack stack={stack} />
         ) : (
-          <TailSpin
-            height="36"
-            width="36"
-            color="#aed2ff"
-            ariaLabel="tail-spin-loading"
-            radius="1"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
+          <StackSkeleton />
         )}
       </div>
 

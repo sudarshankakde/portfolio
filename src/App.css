@@ -258,3 +258,105 @@ pre {
   z-index: 99;
   border-radius: 1.5rem;
 }
+
+/* ─── Blog Article Body Prose ──────────────────────────────── */
+.prose-blog h1,
+.prose-blog h2,
+.prose-blog h3,
+.prose-blog h4 {
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.prose-blog h1 { font-size: 1.75rem; }
+.prose-blog h2 { font-size: 1.4rem; border-bottom: 1px solid rgba(150,118,206,0.2); padding-bottom: 0.4rem; }
+.prose-blog h3 { font-size: 1.15rem; color: #aed2ff; }
+.prose-blog h4 { font-size: 1rem; color: #aed2ff; }
+
+.prose-blog p {
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.80);
+}
+
+.prose-blog ul,
+.prose-blog ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.2rem;
+  color: rgba(255,255,255,0.78);
+}
+.prose-blog ul { list-style-type: disc; }
+.prose-blog ol { list-style-type: decimal; }
+.prose-blog li { margin-bottom: 0.4rem; line-height: 1.7; }
+
+.prose-blog a {
+  color: #aed2ff;
+  text-decoration: underline;
+  text-decoration-color: rgba(174,210,255,0.35);
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.prose-blog a:hover { color: #ffffff; }
+
+.prose-blog blockquote {
+  border-left: 3px solid #9676ce;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: rgba(255,255,255,0.55);
+  font-style: italic;
+}
+
+.prose-blog code {
+  background: rgba(150,118,206,0.15);
+  border: 1px solid rgba(150,118,206,0.25);
+  color: #aed2ff;
+  padding: 0.1em 0.45em;
+  border-radius: 5px;
+  font-size: 0.875em;
+  font-family: "Fira Code", "Cascadia Code", monospace;
+}
+
+.prose-blog pre {
+  background: rgba(11, 2, 26, 0.8);
+  border: 1px solid rgba(48,48,52,1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+.prose-blog pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #dadada;
+  font-size: 0.85rem;
+}
+
+.prose-blog img {
+  border-radius: 12px;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.prose-blog hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 2rem 0;
+}
+
+.prose-blog strong { color: #ffffff; font-weight: 600; }
+.prose-blog em { color: rgba(255,255,255,0.7); }
+
+/* line-clamp utility for related posts */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+

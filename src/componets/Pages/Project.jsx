@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import { ApiBaseURL } from "../..";
 import Background from "../Background";
 import WorkSnippetCard from "../WorkSnippetCard";
-import { TailSpin } from "react-loader-spinner";
+import { ProjectCardSkeleton } from "../SkeletonLoaders";
 import TallyForm from "../TallyForm";
 import { useQuery } from "@tanstack/react-query";
 import { PageSeo } from "../Seo";
 
 function Project() {
   const { isLoading, isError, data } = useQuery({
-    queryKey: "Projects",
+    queryKey: ["Projects"],
     queryFn: () => {
       return fetch(`${ApiBaseURL}api/projects`)
         .then((res) => {
@@ -45,6 +45,8 @@ function Project() {
                 return (
                   <WorkSnippetCard
                     key={index}
+                    slug={project.slug}
+                    has_case_study={project.has_case_study}
                     Thumbnail={project.Thumbnail}
                     title={project.name}
                     link={project.link}
@@ -54,17 +56,10 @@ function Project() {
                 );
               })
             ) : (
-              <div className="h-[65vh]  flex justify-center items-center">
-                <TailSpin
-                  height="36"
-                  width="36"
-                  color="#aed2ff"
-                  ariaLabel="tail-spin-loading"
-                  radius="1"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                />
+              <div className="flex flex-row flex-wrap justify-center items-center gap-x-10 gap-y-10">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <ProjectCardSkeleton key={i} />
+                ))}
               </div>
             )}
             {isError ? (

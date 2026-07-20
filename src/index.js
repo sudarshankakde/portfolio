@@ -16,12 +16,17 @@ import About from "./componets/Pages/About";
 import Blogs from "./componets/Pages/Blogs";
 import ReadBlog from "./componets/Pages/ReadBlog";
 import Project from "./componets/Pages/Project";
+import ReadProject from "./componets/Pages/ReadProject";
 import Resume from "./componets/Pages/Resume";
 import Experience from "./componets/Pages/Experience";
+import Socials from "./componets/Pages/Socials";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-export const ApiBaseURL = "https://sudharshankakde.pythonanywhere.com/";
-export const MediaUrl = "https://sudharshankakde.pythonanywhere.com/DataBase/";
+
+export const ApiBaseURL = process.env.REACT_APP_API_URL || "http://localhost:8000/";
+export const MediaUrl = process.env.REACT_APP_MEDIA_URL || "http://localhost:8000/DataBase/";
+
+
 // const router = createBrowserRouter([
 //   {
 //     path: "/",
@@ -44,8 +49,10 @@ const router = createBrowserRouter(
       <Route path="about" element={<About />}></Route>
       <Route path="contact" element={<Contact />}></Route>
       <Route path="project" element={<Project />}></Route>
+      <Route path="project/:slug" element={<ReadProject />}></Route>
       <Route path="resume" element={<Resume />}></Route>
       <Route path="experience" element={<Experience />}></Route>
+      <Route path="socials" element={<Socials />}></Route>
       <Route path="*" element={<NotFound404 />}></Route>
     </Route>
   )
