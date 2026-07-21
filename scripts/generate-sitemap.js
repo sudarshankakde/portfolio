@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Base site URL - update if needed
-const siteUrl = process.env.SITE_URL || 'https://sudarshankakde.live';
+const siteUrl = process.env.SITE_URL || 'https://sudarshankakde.tech';
 
 const staticRoutes = ['/', '/about', '/blog', '/contact', '/project', '/resume', '/experience'];
 

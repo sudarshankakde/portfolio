@@ -96,7 +96,7 @@ function ReadProject() {
         title={`${project.name} Case Study`}
         description={project.summary || project.name}
         image={resolveImg(project.Thumbnail)}
-        url={`https://sudarshankakde.live/project/${project.slug}`}
+        url={`https://sudarshankakde.tech/project/${project.slug}`}
       />
 
       <ScrollIndicator color="#9676ce" />

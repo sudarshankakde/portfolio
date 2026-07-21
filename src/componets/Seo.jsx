@@ -8,7 +8,7 @@ const defaultMeta = {
   keywords:
     "full stack development, cross-platform development, UI/UX design, web development, mobile app development, responsive design, front-end development, back-end development, programming, coding, software engineering, portfolio, Sudarshan Kakde",
   author: "Sudarshan Kakde",
-  url: "https://sudarshankakde.live/",
+  url: "https://sudarshankakde.tech/",
   image: "%PUBLIC_URL%/logo.png",
 };
 

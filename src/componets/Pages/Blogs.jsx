@@ -12,7 +12,7 @@ const siteOrgJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Sudarshan Kakde - Intricate",
-  url: "https://sudarshankakde.live/blog",
+  url: "https://sudarshankakde.tech/blog",
 };
 
 function Blogs() {

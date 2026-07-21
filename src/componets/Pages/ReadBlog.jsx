@@ -111,7 +111,7 @@ function ReadBlog() {
         title={blog.title}
         description={blog.summary || blog.title}
         image={resolveImg(blog.image)}
-        url={`https://sudarshankakde.live/blog/${blog.slug}`}
+        url={`https://sudarshankakde.tech/blog/${blog.slug}`}
       >
         <script type="application/ld+json">
           {JSON.stringify({
@@ -124,7 +124,7 @@ function ReadBlog() {
             description: blog.summary,
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://sudarshankakde.live/blog/${blog.slug}`,
+              "@id": `https://sudarshankakde.tech/blog/${blog.slug}`,
             },
           })}
         </script>

@@ -41,7 +41,7 @@ export default function Experience() {
         "@type": "Person",
         "name": "Sudarshan Kakde",
         "jobTitle": "Full Stack Developer",
-        "url": "https://sudarshankakde.live/",
+        "url": "https://sudarshankakde.tech/",
         "knowsAbout": [
           "Full Stack Development",
           "React",
@@ -94,10 +94,10 @@ export default function Experience() {
       <PageSeo
         title="Experience"
         description="Professional experience, roles, and internships of Sudarshan Kakde, Full Stack Web & Mobile App Developer."
-        url="https://sudarshankakde.live/experience"
+        url="https://sudarshankakde.tech/experience"
       >
         <meta name="keywords" content="Sudarshan Kakde experience, Sudarshan Kakde resume, full stack developer internships, Nagpur developer, django developer Nagpur, react developer Nagpur" />
-        <link rel="canonical" href="https://sudarshankakde.live/experience" />
+        <link rel="canonical" href="https://sudarshankakde.tech/experience" />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>

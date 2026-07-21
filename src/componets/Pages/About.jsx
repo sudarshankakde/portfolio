@@ -8,7 +8,7 @@ const siteJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Sudarshan Kakde",
-  url: "https://sudarshankakde.live/",
+  url: "https://sudarshankakde.tech/",
   sameAs: [
     "https://github.com/sudarshankakde",
     "https://www.linkedin.com/in/sudarshankakde/"
