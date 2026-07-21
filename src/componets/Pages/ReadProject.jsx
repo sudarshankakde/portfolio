@@ -69,10 +69,11 @@ function ReadProject() {
     if (!project) return ["Overview"];
     const list = ["Overview"];
     const projectBody = project.case_study ?? "";
-    const projectTools = project.tools ?? [];
     if (projectBody) {
-      const matches = [...projectBody.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi)];
-      const parsedHeadings = matches.map((m) => m[1].replace(/<[^>]+>/g, "").trim()).filter(Boolean);
+      const matches = [...projectBody.matchAll(/<h[23][^>]*>(.*?)<\/h[23]>/gi)];
+      const parsedHeadings = matches
+        .map((m) => m[1].replace(/<[^>]+>/g, "").replace(/^\d+[.\s-]*/, "").trim())
+        .filter(Boolean);
       if (parsedHeadings.length > 0) {
         list.push(...parsedHeadings);
       } else {
@@ -81,7 +82,6 @@ function ReadProject() {
     } else {
       list.push("Summary");
     }
-    if (projectTools.length > 0 || project.skills) list.push("Technologies");
     if (otherProjects.length > 0) list.push("Other Projects");
     return list;
   }, [project, otherProjects.length]);
@@ -98,15 +98,14 @@ function ReadProject() {
           const scrollPos = window.scrollY + 180;
           const sections = sidebarItems.map((label) => {
             if (label === "Overview") return { label, top: 0 };
-            if (label === "Technologies") {
-              return { label, top: getElementTop(document.getElementById("technologies-section")) };
-            }
             if (label === "Other Projects") {
               return { label, top: getElementTop(document.getElementById("other-projects-section")) };
             }
             const allHeadings = document.querySelectorAll("article h2, article h3");
             for (const h of allHeadings) {
-              if (h.innerText.trim().toLowerCase() === label.toLowerCase()) {
+              const cleanText = h.innerText.replace(/^\d+[.\s-]*/, "").trim().toLowerCase();
+              const labelLower = label.toLowerCase();
+              if (cleanText.includes(labelLower) || labelLower.includes(cleanText)) {
                 return { label, top: getElementTop(h) };
               }
             }
@@ -137,11 +136,6 @@ function ReadProject() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    if (label === "Technologies") {
-      const el = document.getElementById("technologies-section");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
     if (label === "Other Projects") {
       const el = document.getElementById("other-projects-section");
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -150,7 +144,9 @@ function ReadProject() {
     // Match heading text inside case study article
     const allHeadings = document.querySelectorAll("article h2, article h3");
     for (const h of allHeadings) {
-      if (h.innerText.trim().toLowerCase() === label.toLowerCase()) {
+      const cleanText = h.innerText.replace(/^\d+[.\s-]*/, "").trim().toLowerCase();
+      const labelLower = label.toLowerCase();
+      if (cleanText.includes(labelLower) || labelLower.includes(cleanText)) {
         h.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
@@ -195,12 +191,10 @@ function ReadProject() {
         url={`https://sudarshankakde.tech/project/${project.slug}`}
       />
 
-      <ScrollIndicator color="#9676ce" />
-
-      {/* Main Layout Container with LineSidebar Table of Contents */}
-      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-8 items-start justify-center pt-4 pb-20">
+      <ScrollIndicator color="#9676ce" />      {/* Main Layout Container with LineSidebar Table of Contents */}
+      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 items-start justify-center pt-2 pb-12 min-w-0 overflow-hidden">
         {/* Sticky Desktop LineSidebar ToC */}
-        <div className="hidden lg:block sticky top-28 z-20 min-w-[220px] pt-4 shrink-0">
+        <div className="hidden lg:block sticky top-28 z-20 min-w-[200px] pt-2 shrink-0">
           <LineSidebar
             items={sidebarItems}
             active={activeIndex}
@@ -215,9 +209,9 @@ function ReadProject() {
           />
         </div>
 
-        <article className="flex-1 w-full max-w-auto">
+        <article className="flex-1 min-w-0 w-full overflow-hidden">
           {/* Breadcrumb */}
-          <nav className="flex flex-row flex-wrap gap-2 items-center font-semibold text-sm md:mt-5 mb-6 text-white/50">
+          <nav className="flex flex-row flex-wrap gap-2 items-center font-semibold text-sm md:mt-2 mb-4 text-white/50">
             <NavLink to="/project" className="hover:text-[#aed2ff] gap-1.5 flex items-center transition-colors duration-200">
               <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                 <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z" />
@@ -229,7 +223,7 @@ function ReadProject() {
           </nav>
 
           {/* Thumbnail Hero */}
-          <div className="rounded-2xl overflow-hidden w-full mb-8 border border-white/5">
+          <div className="rounded-2xl overflow-hidden w-full mb-6 border border-white/5">
             <img
               src={resolveImg(project.Thumbnail)}
               alt={project.name}
@@ -242,9 +236,9 @@ function ReadProject() {
           </div>
 
           {/* Project Meta Info Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-6 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5 mb-6">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-1.5">
                 {project.name}
               </h1>
               <p className="text-sm font-mono text-[#aed2ff]">
@@ -284,10 +278,10 @@ function ReadProject() {
             </div>
           </div>
 
-          {/* Content & Sidebar Grid */}
-          <div className="flex flex-col lg:flex-row gap-8 items-start mb-16">
-            {/* Main Case Study */}
-            <div id="case-study-section" className="flex-1 w-full">
+          {/* Content & Case Study */}
+          <div className="w-full mb-8">
+            {/* Main Case Study Content */}
+            <div id="case-study-section" className="w-full">
               {body ? (
                 <div className="prose-blog text-white/85 leading-relaxed text-[15px]">
                   {parse(body)}
@@ -295,54 +289,59 @@ function ReadProject() {
               ) : (
                 <div className="text-white/60 text-[15px] leading-relaxed">
                   <p>{project.summary}</p>
-                  <div className="mt-8 border-l-2 border-[#9676ce]/50 pl-4 py-1 text-sm italic text-white/40">
+                  <div className="mt-6 border-l-2 border-[#9676ce]/50 pl-4 py-1 text-sm italic text-white/40">
                     Detailed Case Study description is currently being curated. Check out the Live Demo or GitHub repository to see the project in action!
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Tools & Skills Sidebar */}
-            <div id="technologies-section" className="w-full lg:w-[280px] shrink-0 border border-[#303034] black-gradient rounded-2xl p-4">
-              <h3 className="text-sm font-semibold tracking-wider uppercase text-white/40 mb-4">
-                Technologies & Tools
-              </h3>
-              {tools.length > 0 ? (
-                <div className="grid grid-cols-1 gap-2">
-                  {tools.map((t, i) => (
-                    <div key={i} className="group flex items-center gap-2 bg-white/5 border border-white/5 rounded-xl px-2 py-1.5 hover:bg-white/10 hover:border-white/10 transition-all duration-200">
-                      {t.logo ? (
-                        <img
-                          src={resolveImg(t.logo)}
-                          alt={t.name}
-                          className="w-7 h-7 object-contain brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity duration-200"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-5 h-5 rounded bg-[#9676ce]/20 flex items-center justify-center text-md text-[#aed2ff] font-mono">
-                          🛠
-                        </div>
-                      )}
-                      <div className="min-w-0 flex flex-col justify-center">
-                        <p className="text-md font-semibold text-white truncate leading-tight" title={t.name}>{t.name}</p>
-                        <p className="text-[10px] font-mono text-white/30 uppercase truncate leading-none mt-0.5">{t.type}</p>
-                      </div>
-                    </div>
-                  ))}
+            {/* Technologies & Stack Infinite Sliding Marquee Bar */}
+            {(tools.length > 0 || project.skills) && (
+              <div id="technologies-section" className="w-full mt-8 mb-4 border border-[#303034] black-gradient rounded-2xl p-4 overflow-hidden">
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <h3 className="text-xs font-bold tracking-widest uppercase text-[#aed2ff] font-mono flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#9676ce] animate-ping"></span>
+                    Technologies & Tools Stack
+                  </h3>
+                  <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+                    {tools.length > 0 ? `${tools.length} Tools Used` : "Skills"}
+                  </span>
                 </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {project.skills?.split(",").map((s, i) => (
-                    <span
-                      key={i}
-                      className="text-[11px] font-mono bg-white/5 border border-white/10 text-white/70 px-2.5 py-1 rounded-lg capitalize"
-                    >
-                      {s.trim()}
-                    </span>
-                  ))}
+
+                <div className="scroller w-full" data-speed="fast" data-animated="true">
+                  <ul className="scroller__inner flex items-center gap-3 py-1">
+                    {tools.length > 0 ? (
+                      tools.concat(tools).concat(tools).map((t, i) => (
+                        <li key={i} className="group shrink-0 flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 hover:bg-white/10 hover:border-[#9676ce]/50 transition-all duration-300">
+                          {t.logo ? (
+                            <img
+                              src={resolveImg(t.logo)}
+                              alt={t.name}
+                              className="w-5 h-5 object-contain brightness-0 invert opacity-75 group-hover:opacity-100 transition-opacity duration-200"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="text-xs">🛠</span>
+                          )}
+                          <div className="flex flex-col text-left">
+                            <span className="text-xs font-semibold text-white tracking-tight leading-tight">{t.name}</span>
+                            <span className="text-[9px] font-mono text-white/40 uppercase leading-none mt-0.5">{t.type}</span>
+                          </div>
+                        </li>
+                      ))
+                    ) : (
+                      project.skills?.split(",").concat(project.skills?.split(",")).concat(project.skills?.split(",")).map((s, i) => (
+                        <li key={i} className="shrink-0 flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#9676ce]"></span>
+                          <span className="text-xs font-mono text-white/90 capitalize">{s.trim()}</span>
+                        </li>
+                      ))
+                    )}
+                  </ul>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Other Projects Recommendation */}
