@@ -503,7 +503,7 @@ export default function Socials() {
                             value={emailSubject}
                             onChange={(e) => setEmailSubject(e.target.value)}
                             onClick={(e) => e.stopPropagation()}
-                            className="w-full text-xs bg-white/5 border border-white/10 rounded-md px-2.5 py-1.5 text-white placeholder-white/40 focus:outline-none focus:border-[#9676ce]/50 font-sans"
+                            className="w-full text-xs bg-[#13111c] border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-[#9676ce] focus:ring-1 focus:ring-[#9676ce] font-sans transition-colors"
                             required
                           />
                           <textarea 
@@ -512,7 +512,7 @@ export default function Socials() {
                             onChange={(e) => setEmailBody(e.target.value)}
                             onClick={(e) => e.stopPropagation()}
                             rows={2}
-                            className="w-full text-xs bg-white/5 border border-white/10 rounded-md px-2.5 py-1.5 text-white placeholder-white/40 focus:outline-none focus:border-[#9676ce]/50 resize-none font-sans"
+                            className="w-full text-xs bg-[#13111c] border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-[#9676ce] focus:ring-1 focus:ring-[#9676ce] resize-none font-sans transition-colors"
                             required
                           />
                         </div>
