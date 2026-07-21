@@ -17,6 +17,7 @@
     "html-react-parser": "^5.0.10",
     "leaflet": "^1.9.4",
     "locomotive-scroll": "^4.1.4",
+    "ogl": "^1.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-headroom": "^3.2.1",

@@ -1,0 +1,47 @@
+.scroll-reveal {
+  margin: 15px 0;
+  width: 100%;
+}
+
+.scroll-reveal-text {
+  font-size: clamp(1.35rem, 3.2vw, 2.25rem);
+  line-height: 1.55;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.scroll-reveal-text strong, 
+.scroll-reveal-text b {
+  color: inherit;
+  font-weight: 800;
+}
+
+.scroll-reveal-text em, 
+.scroll-reveal-text i {
+  font-style: italic;
+  color: #ceade6;
+}
+
+.scroll-reveal-text a {
+  color: #9676ce;
+  text-decoration: underline;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.scroll-reveal-text a:hover {
+  color: #aed2ff;
+}
+
+.scroll-reveal-text p {
+  margin-bottom: 1.2rem;
+}
+
+.word {
+  display: inline-block;
+  will-change: opacity, filter, transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}

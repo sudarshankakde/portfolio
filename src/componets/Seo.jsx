@@ -2,11 +2,11 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const defaultMeta = {
-  title: "Sudarshan Kakde | Full Stack Developer",
+  title: "Sudarshan Kakde | AI/LLM Developer & Python Backend Engineer",
   description:
-    "Crafting seamless digital experiences with a passion for full-stack development. Elevating UI/UX with joyous expertise!",
+    "AI/LLM Developer & Python Backend Engineer with 1.5+ years of experience in Django, React, REST APIs, OpenAI integration, LangChain, and RAG systems.",
   keywords:
-    "full stack development, cross-platform development, UI/UX design, web development, mobile app development, responsive design, front-end development, back-end development, programming, coding, software engineering, portfolio, Sudarshan Kakde",
+    "AI developer, LLM integration, Python backend engineer, Django developer, LangChain, RAG systems, OpenAI API, FastAPI, full stack developer, Sudarshan Kakde, Nagpur developer",
   author: "Sudarshan Kakde",
   url: "https://sudarshankakde.tech/",
   image: "%PUBLIC_URL%/logo.png",

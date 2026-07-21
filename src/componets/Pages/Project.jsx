@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ApiBaseURL } from "../..";
 import Background from "../Background";
 import WorkSnippetCard from "../WorkSnippetCard";
@@ -20,29 +20,31 @@ function Project() {
         });
     },
   });
+
   useEffect(() => {
     document.title = "Projects";
   }, []);
 
+  const projectsList = useMemo(() => data?.data ?? [], [data]);
+
   return (
-    <div   >
+    <div>
       <PageSeo title="Projects" description="A showcase of projects crafted by Sudarshan — web, apps and experiments." />
-      <div
-        className="flex flex-col  items-center justify-center w-full  mb-36"
-        
-      >
+      <div className="flex flex-col items-center justify-center w-full mb-36">
         <Background />
-        <div className=" flex flex-col justify-center items-center gap-y-10 z-10">
-          <div className="my-2 flex flex-col justify-center items-center  gap-y-3">
+        <div className="flex flex-col justify-center items-center gap-y-10 z-10 w-full max-w-7xl px-4">
+          <div className="my-2 flex flex-col justify-center items-center gap-y-3">
             <h2 className="md:text-6xl text-5xl font-Kalnia">Projects</h2>
             <p className="md:text-lg tracking-widest font-semibold opacity-75">
               Crafted With Love ❤️
             </p>
           </div>
-          <div className="flex flex-row flex-wrap justify-center items-center gap-x-10 gap-y-10 ">
+
+          {/* Projects content grid */}
+          <div className="flex flex-row flex-wrap justify-center items-center gap-x-10 gap-y-10 w-full">
             {!isLoading ? (
-              data?.data.map((project, index) => {
-                return (
+              projectsList.length > 0 ? (
+                projectsList.map((project, index) => (
                   <WorkSnippetCard
                     key={index}
                     slug={project.slug}
@@ -53,8 +55,12 @@ function Project() {
                     skills={project.skills}
                     projectType={project.projectType}
                   />
-                );
-              })
+                ))
+              ) : (
+                <div className="py-12 text-center text-white/50 font-mono text-sm">
+                  No projects found
+                </div>
+              )
             ) : (
               <div className="flex flex-row flex-wrap justify-center items-center gap-x-10 gap-y-10">
                 {Array.from({ length: 6 }).map((_, i) => (
@@ -62,19 +68,16 @@ function Project() {
                 ))}
               </div>
             )}
-            {isError ? (
-              <p className="font-[400] tracking-tight text-center mb-5 mt-3  opacity-90 px-2   text-lg">
-                Some Thing Interrupt While Loading My Crafted
+            {isError && (
+              <p className="font-[400] tracking-tight text-center mb-5 mt-3 opacity-90 px-2 text-lg">
+                Something interrupted while loading projects
               </p>
-            ) : (
-              <></>
             )}
           </div>
         </div>
         <div className="md:py-40 py-20"></div>
         <TallyForm />
       </div>
-      <div></div>
     </div>
   );
 }

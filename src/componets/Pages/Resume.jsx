@@ -14,7 +14,7 @@ function Resume() {
         })
         .catch(() => ({ resume_url: "https://drive.google.com/file/d/1C6qN9ymexmav2f-WFrlywPaf6kstnfcR/preview" }));
     },
-    staleTime: 1000 * 60 * 60 * 24, // cache for 24h
+    staleTime: 1000 * 30, // cache for 30s
   });
 
   const resumeUrl = resumeData?.resume_url || "https://drive.google.com/file/d/1C6qN9ymexmav2f-WFrlywPaf6kstnfcR/preview";

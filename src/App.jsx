@@ -21,7 +21,9 @@ function App() {
           <ScrollToTop />
           {/* <Loader /> */}
           <Navbar />
-          <Outlet />
+          <div className="mt-[4em] md:mt-[5em]">
+            <Outlet />
+          </div>
           <Footer />
         </HelmetProvider>
       </QueryClientProvider>

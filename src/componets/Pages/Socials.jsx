@@ -5,79 +5,32 @@ import { Link } from "react-router-dom";
 import { ApiBaseURL } from "../..";
 import { PageSeo } from "../Seo";
 import Background from "../Background";
+import { ParticleCard, GlobalSpotlight, useMobileDetection } from "../MagicBento";
 import parse from "html-react-parser";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// SpotlightCard integrates with the theme's glassmorphism style, mouse tracking glow, and 3D Perspective Tilt
-const SpotlightCard = ({ children, className = "", color = "rgba(150, 118, 206, 0.15)", onClick, ...props }) => {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+const GLOW_COLOR = "150, 118, 206";
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setCoords({ x, y });
-
-    // Calculate rotation relative to the center of the card
-    const width = rect.width;
-    const height = rect.height;
-    const centerX = x - width / 2;
-    const centerY = y - height / 2;
-    
-    const rotateX = (centerY / (height / 2)) * 4;
-    const rotateY = -(centerX / (width / 2)) * 4;
-    setRotate({ x: rotateX, y: rotateY });
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setRotate({ x: 0, y: 0 });
-  };
-
-  return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      onClick={onClick}
-      className={`relative overflow-hidden ${className}`}
-      animate={{
-        rotateX: rotate.x,
-        rotateY: rotate.y,
-        scale: isHovered ? 1.012 : 1,
-      }}
-      transition={{ type: "spring", stiffness: 350, damping: 25 }}
-      style={{
-        transformStyle: "preserve-3d",
-        perspective: "1000px",
-      }}
-      {...props}
-    >
-      <div
-        className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(circle 220px at ${coords.x}px ${coords.y}px, ${color}, transparent)`,
-        }}
-      />
-      <div className="relative z-10 h-full flex flex-col justify-between" style={{ transform: "translateZ(15px)" }}>
-        {children}
-      </div>
-    </motion.div>
-  );
-};
 
 export default function Socials() {
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const gridRef = useRef(null);
+  const isMobile = useMobileDetection();
   
   // Leaflet refs to handle initialization, cleanup, and dynamic panning updates
   const mapContainerRef = useRef(null);
   const leafletMapRef = useRef(null);
   const markerRef = useRef(null);
+
+  // Dynamic feature state hooks
+  const [showRoutine, setShowRoutine] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailBody, setEmailBody] = useState("");
+  const [linkedinIndex, setLinkedinIndex] = useState(0);
+
 
   // Real-time ticking digital clock for user's timezone
   useEffect(() => {
@@ -183,6 +136,51 @@ export default function Socials() {
     };
   }, [lat, lng]);
 
+
+  const dailyRoutines = [
+    { hours: "00:00 - 06:00", emoji: "😴", activity: "Sleeping" },
+    { hours: "06:00 - 08:00", emoji: "🏃", activity: "Morning Routine" },
+    { hours: "08:00 - 12:00", emoji: "💻", activity: "Coding" },
+    { hours: "12:00 - 13:00", emoji: "🍱", activity: "Lunch Break" },
+    { hours: "13:00 - 17:00", emoji: "⚡", activity: "Building Projects" },
+    { hours: "17:00 - 19:00", emoji: "📚", activity: "Studying" },
+    { hours: "19:00 - 21:00", emoji: "🎮", activity: "Chilling" },
+    { hours: "21:00 - 24:00", emoji: "🌙", activity: "Winding Down" },
+  ];
+
+  const activeRoutineIndex = (() => {
+    const now = new Date();
+    const istHour = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getHours();
+    if (istHour >= 0 && istHour < 6) return 0;
+    if (istHour >= 6 && istHour < 8) return 1;
+    if (istHour >= 8 && istHour < 12) return 2;
+    if (istHour >= 12 && istHour < 13) return 3;
+    if (istHour >= 13 && istHour < 17) return 4;
+    if (istHour >= 17 && istHour < 19) return 5;
+    if (istHour >= 19 && istHour < 21) return 6;
+    return 7;
+  })();
+
+  const linkedinHighlights = [
+    {
+      title: "Full-Stack Development",
+      techs: ["React", "Django", "Next.js", "PostgreSQL"],
+      stat: "15+ Completed Projects",
+      desc: "Architecting clean RESTful APIs and responsive interactive user interfaces."
+    },
+    {
+      title: "Mobile Architecture",
+      techs: ["Flutter", "Dart", "Firebase", "State Management"],
+      stat: "Cross-platform Mobile apps",
+      desc: "Building highly-performant native Android/iOS mobile applications."
+    },
+    {
+      title: "Cloud Infrastructure",
+      techs: ["VPS Deployment", "Nginx", "Docker", "Gunicorn"],
+      stat: "Robust Production Pipelines",
+      desc: "Configuring secure servers with automated updates and SSL setups."
+    }
+  ];
 
 
   // Query overall GitHub Profile Statistics (Stars, Forks, Repos, Followers)
@@ -452,64 +450,129 @@ export default function Socials() {
           </p>
         </div>
 
+        {/* MagicBento Global Spotlight Effect */}
+        <GlobalSpotlight gridRef={gridRef} enabled={!isMobile} glowColor={GLOW_COLOR} />
+
         {/* Bento Grid structured in the theme's glassmorphism style */}
         <motion.div
+          ref={gridRef}
           layout
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-[90%] md:w-full px-4 md:px-0"
+          className="bento-section grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-[90%] md:w-full px-4 md:px-0"
         >
           <AnimatePresence mode="popLayout">
             {socialLinks.map((social) => {
               
               // Email Card (Compact 1-column layout)
               if (social.isEmail) {
+                const handleSendEmail = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.href = `mailto:sudarshankakde1111@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                };
+
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
-                    className={`black-gradient border border-[#303034] rounded-3xl p-6 cursor-pointer flex flex-col justify-between min-h-[220px] ${social.size}`}
-                    onClick={handleCopyEmail}
+                    glowColor={GLOW_COLOR}
+                    className={`black-gradient border border-[#303034] rounded-3xl p-6 flex flex-col justify-between min-h-[220px] ${social.size}`}
                   >
-                    <div className="flex flex-row justify-between items-start w-full">
-                      <div className="bg-white/5 p-3.5 rounded-2xl border border-white/5 flex items-center justify-center">
-                        <i className={`${social.iconClass} text-3xl`}></i>
-                      </div>
-                      <motion.button
-                        animate={{
-                          scale: copied ? [1, 1.1, 1] : 1,
-                          backgroundColor: copied ? "rgba(34, 197, 94, 0.2)" : "rgba(255, 255, 255, 0.05)",
-                          borderColor: copied ? "rgba(34, 197, 94, 0.5)" : "rgba(255, 255, 255, 0.1)",
-                        }}
-                        className="px-3 py-1.5 text-[10px] font-semibold rounded-full border border-white/10 text-white flex items-center gap-1 shadow-sm"
-                      >
-                        {copied ? (
-                          <>
-                            <i className="bi bi-check-lg text-sm text-green-400"></i>
-                            Copied!
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-copy text-xs"></i>
-                            Copy
-                          </>
-                        )}
-                      </motion.button>
-                    </div>
-                    <div className="mt-6">
-                      <h3 className="text-xl font-semibold text-white uppercase tracking-wide leading-none">
-                        {social.name}
-                      </h3>
-                      <p className="text-[#aed2ff] text-xs font-mono mt-1.5">{social.username}</p>
-                      <p className="text-gray-300 mt-2.5 text-xs leading-relaxed">
-                        {social.desc}
-                      </p>
-                    </div>
-                  </SpotlightCard>
+                    {showEmailForm ? (
+                      <form onSubmit={handleSendEmail} className="flex flex-col h-full justify-between w-full text-left">
+                        <div className="flex justify-between items-center w-full mb-3">
+                          <span className="text-[#aed2ff] text-[9px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-0.5 uppercase tracking-wider">
+                            Compose Email
+                          </span>
+                          <button 
+                            type="button"
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmailForm(false); }}
+                            className="text-white/60 hover:text-white text-[10px] font-mono hover:underline focus:outline-none"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        <div className="flex-1 flex flex-col gap-2">
+                          <input 
+                            type="text" 
+                            placeholder="Subject" 
+                            value={emailSubject}
+                            onChange={(e) => setEmailSubject(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full text-xs bg-white/5 border border-white/10 rounded-md px-2.5 py-1.5 text-white placeholder-white/40 focus:outline-none focus:border-[#9676ce]/50 font-sans"
+                            required
+                          />
+                          <textarea 
+                            placeholder="Your message..." 
+                            value={emailBody}
+                            onChange={(e) => setEmailBody(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            rows={2}
+                            className="w-full text-xs bg-white/5 border border-white/10 rounded-md px-2.5 py-1.5 text-white placeholder-white/40 focus:outline-none focus:border-[#9676ce]/50 resize-none font-sans"
+                            required
+                          />
+                        </div>
+                        <button 
+                          type="submit"
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full mt-3 py-1.5 text-[10px] font-semibold tracking-wider font-mono rounded-lg border border-white/10 bg-[#9676ce]/20 hover:bg-[#9676ce]/30 hover:border-[#9676ce]/50 text-[#aed2ff] transition-all flex items-center justify-center gap-1.5 focus:outline-none"
+                        >
+                          <i className="bi bi-send text-xs"></i>
+                          Send Email
+                        </button>
+                      </form>
+                    ) : (
+                      <>
+                        <div className="flex flex-row justify-between items-start w-full">
+                          <div className="bg-white/5 p-3.5 rounded-2xl border border-white/5 flex items-center justify-center">
+                            <i className={`${social.iconClass} text-3xl`}></i>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowEmailForm(true); }}
+                              className="px-2.5 py-1 text-[10px] font-semibold font-mono rounded-full border border-white/10 hover:border-white/30 text-white flex items-center gap-1 focus:outline-none transition-all"
+                            >
+                              Write ✏️
+                            </button>
+                            <motion.button
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCopyEmail(); }}
+                              animate={{
+                                scale: copied ? [1, 1.1, 1] : 1,
+                                backgroundColor: copied ? "rgba(34, 197, 94, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                                borderColor: copied ? "rgba(34, 197, 94, 0.5)" : "rgba(255, 255, 255, 0.1)",
+                              }}
+                              className="px-3 py-1 text-[10px] font-semibold rounded-full border border-white/10 text-white flex items-center gap-1 shadow-sm focus:outline-none"
+                            >
+                              {copied ? (
+                                <>
+                                  <i className="bi bi-check-lg text-sm text-green-400"></i>
+                                  Copied!
+                                </>
+                              ) : (
+                                <>
+                                  <i className="bi bi-copy text-xs"></i>
+                                  Copy
+                                </>
+                              )}
+                            </motion.button>
+                          </div>
+                        </div>
+                        <div className="mt-6 text-left">
+                          <h3 className="text-xl font-semibold text-white uppercase tracking-wide leading-none">
+                            {social.name}
+                          </h3>
+                          <p className="text-[#aed2ff] text-xs font-mono mt-1.5">{social.username}</p>
+                          <p className="text-gray-300 mt-2.5 text-xs leading-relaxed">
+                            {social.desc}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </ParticleCard>
                 );
               }
 
@@ -519,47 +582,103 @@ export default function Socials() {
                 const moodText = currentStatus.mood;
 
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
+                    glowColor={GLOW_COLOR}
+                    disableAnimations={true}
                     className={`black-gradient border border-[#303034] rounded-3xl p-6 flex flex-col justify-between min-h-[220px] ${social.size}`}
                   >
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <span className="text-[#3b8ef4] text-[10px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-0.5 uppercase tracking-wider">
-                        {social.badge}
-                      </span>
-                      <span className="text-lg">{moodEmoji}</span>
-                    </div>
-
-                    <div className="my-2 text-left">
-                      <div className="text-3xl font-mono font-bold text-white tracking-tighter tabular-nums leading-none">
-                        {currentTime || "00:00:00 AM"}
+                    {showRoutine ? (
+                      <div className="flex flex-col h-full justify-between w-full">
+                        <div className="flex justify-between items-center w-full mb-3">
+                          <span className="text-[#3b8ef4] text-[9px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-0.5 uppercase tracking-wider">
+                            SCHEDULE (IST)
+                          </span>
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRoutine(false); }}
+                            className="text-white/60 hover:text-white text-[10px] font-mono hover:underline focus:outline-none"
+                          >
+                            Back
+                          </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto max-h-[140px] pr-1 select-none text-left scrollbar-thin">
+                          {dailyRoutines.map((r, i) => {
+                            const isActive = i === activeRoutineIndex;
+                            return (
+                              <div 
+                                key={i} 
+                                className={`flex items-center justify-between py-1 px-2 rounded-lg text-[10.5px] mb-1 font-mono transition-all ${
+                                  isActive 
+                                    ? "bg-[#9676ce]/20 border border-[#9676ce]/40 text-[#aed2ff]" 
+                                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                                }`}
+                              >
+                                <div className="flex items-center gap-1.5">
+                                  <span>{r.emoji}</span>
+                                  <span className="truncate">{r.activity}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] opacity-70">{r.hours}</span>
+                                  {isActive && (
+                                    <span className="relative flex h-1.5 w-1.5">
+                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                      <p className="text-[#aed2ff] text-[10px] font-semibold tracking-wider uppercase mt-1">
-                        Local Time
-                      </p>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <span className="text-[#3b8ef4] text-[10px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-0.5 uppercase tracking-wider">
+                            {social.badge}
+                          </span>
+                          <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowRoutine(true); }}
+                            className="text-white/50 hover:text-white text-[10.5px] font-mono border border-white/10 hover:border-white/30 rounded-md px-2 py-0.5 transition-all focus:outline-none"
+                          >
+                            Schedule 🗓️
+                          </button>
+                        </div>
 
-                    <div className="text-gray-400 text-[11px] leading-tight flex items-center gap-1 mt-1">
-                      <span>Status:</span>
-                      <span className="text-white font-medium capitalize">{moodText}</span>
-                    </div>
-                  </SpotlightCard>
+                        <div className="my-2 text-left">
+                          <div className="text-3xl font-mono font-bold text-white tracking-tighter tabular-nums leading-none">
+                            {currentTime || "00:00:00 AM"}
+                          </div>
+                          <p className="text-[#aed2ff] text-[10px] font-semibold tracking-wider uppercase mt-1">
+                            Local Time
+                          </p>
+                        </div>
+
+                        <div className="text-gray-400 text-[11px] leading-tight flex items-center gap-1 mt-1 text-left">
+                          <span>Status:</span>
+                          <span className="text-white font-medium capitalize flex items-center gap-1">
+                            <span>{moodEmoji}</span>
+                            <span>{moodText}</span>
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </ParticleCard>
                 );
               }
 
               // Dynamic Recent Blog Post Card
               if (social.isRecentPost) {
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
+                    glowColor={GLOW_COLOR}
                     className={`black-gradient border border-[#303034] rounded-3xl p-6 flex flex-col justify-between min-h-[220px] ${social.size}`}
                   >
                     {blogsLoading ? (
@@ -591,10 +710,10 @@ export default function Socials() {
                             <i className="bi bi-arrow-up-right text-[10px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"></i>
                           </div>
                         </div>
-                        <div className="mt-4 flex flex-col justify-between flex-1">
+                        <div className="mt-4 flex flex-col justify-start flex-1">
                           <img src={recentBlog.image} className="w-full h-[20px] md:h-[250px] rounded-2xl mb-3 object-cover" alt={recentBlog.alt_text} />
                           <div>
-                            <h3 className="text-xl font-semibold text-white uppercase tracking-wide group-hover:text-[#aed2ff] transition-colors line-clamp-1">
+                            <h3 className="text-xl font-semibold text-white uppercase tracking-wide group-hover:text-[#aed2ff] transition-colors line-clamp-3">
                               {recentBlog.title}
                             </h3>
                             <div className="text-gray-300 mt-2 text-sm leading-relaxed line-clamp-4">
@@ -621,25 +740,51 @@ export default function Socials() {
                         </div>
                       </div>
                     )}
-                  </SpotlightCard>
+                  </ParticleCard>
                 );
               }
 
               // Dynamic Coordinates Map & Weather Card (Wide 2-column format aligned at the top of the grid)
               if (social.isMap) {
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
+                    glowColor={GLOW_COLOR}
+                    disableAnimations={true}
                     className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] flex flex-col justify-between ${social.size}`}
                   >
                     <div className="flex flex-col md:flex-row items-stretch justify-between h-full gap-6 w-full relative">
                       {/* Left: Map Frame */}
                       <div className="flex-[1.8] min-h-[160px] md:min-h-0 rounded-2xl border border-white/10 overflow-hidden relative become-a-dinosaur-map bg-[#f5f5f2]">
                         <div ref={mapContainerRef} className="w-full h-full absolute inset-0" />
+                        
+                        {/* Map Interactive Overlay Controls */}
+                        <div className="absolute top-2 right-2 z-[400] flex flex-col gap-1.5 select-none">
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); leafletMapRef.current?.zoomIn(); }}
+                            className="w-7 h-7 bg-black/75 border border-white/10 rounded-md hover:bg-[#9676ce] hover:text-white flex items-center justify-center text-sm font-bold transition-all text-white"
+                            title="Zoom In"
+                          >
+                            +
+                          </button>
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); leafletMapRef.current?.zoomOut(); }}
+                            className="w-7 h-7 bg-black/75 border border-white/10 rounded-md hover:bg-[#9676ce] hover:text-white flex items-center justify-center text-sm font-bold transition-all text-white"
+                            title="Zoom Out"
+                          >
+                            -
+                          </button>
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); leafletMapRef.current?.setView([lat, lng], 13); }}
+                            className="w-7 h-7 bg-black/75 border border-white/10 rounded-md hover:bg-[#9676ce] hover:text-white flex items-center justify-center text-xs transition-all text-white"
+                            title="Reset View"
+                          >
+                            🎯
+                          </button>
+                        </div>
                       </div>
 
                       {/* Right: Info Panel */}
@@ -678,7 +823,7 @@ export default function Socials() {
                         </div>
                       </div>
                     </div>
-                  </SpotlightCard>
+                  </ParticleCard>
                 );
               }
 
@@ -698,9 +843,7 @@ export default function Socials() {
                 const totalStars = githubProfile ? githubProfile.totalStars : 35;
                 const totalForks = githubProfile ? githubProfile.totalForks : 8;
                 const publicRepos = githubProfile ? githubProfile.publicRepos : 15;
-                const followers = githubProfile ? githubProfile.followers : 12;
                 const currentWeekCommits = githubCommitActivity ? githubCommitActivity.currentWeekCommits : 5;
-                const avgCommits = githubCommitActivity ? githubCommitActivity.avgCommits : 4.8;
 
                 const hasStats = githubCommitStats &&
                   githubCommitStats.history &&
@@ -713,12 +856,12 @@ export default function Socials() {
                 const history = (hasStats && historySum > 0) ? githubCommitStats.history : fallbackHistory;
 
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
+                    glowColor={GLOW_COLOR}
                     className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] ${social.size}`}
                   >
                     <a
@@ -756,13 +899,7 @@ export default function Socials() {
                             <span className="text-[10px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-1 rounded-md text-white">
                               📁 {publicRepos} Repos
                             </span>
-                            <span className="text-[10px] font-semibold font-mono bg-white/5 border border-white/5 px-2.5 py-1 rounded-md text-white">
-                              👥 {followers} Followers
-                            </span>
                             <span className="text-[10px] font-semibold font-mono bg-[#9676ce]/20 border border-[#9676ce]/40 px-2.5 py-1 rounded-md text-[#aed2ff]">
-                              📈 {avgCommits}/Wk Avg
-                            </span>
-                            <span className="text-[10px] font-semibold font-mono bg-green-500/10 border border-green-500/30 px-2.5 py-1 rounded-md text-green-400">
                               🔥 {currentWeekCommits} This Wk
                             </span>
                           </div>
@@ -806,71 +943,111 @@ export default function Socials() {
                         </div>
                       </div>
                     </a>
-                  </SpotlightCard>
+                  </ParticleCard>
                 );
               }
 
               // Dynamic LinkedIn Card (1-column format stacking directly below Instagram)
               if (social.id === "linkedin") {
+                const activeHighlight = linkedinHighlights[linkedinIndex];
+                const handleNext = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setLinkedinIndex((prev) => (prev + 1) % linkedinHighlights.length);
+                };
+                const handlePrev = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setLinkedinIndex((prev) => (prev - 1 + linkedinHighlights.length) % linkedinHighlights.length);
+                };
+
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
-                    className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] ${social.size}`}
+                    glowColor={GLOW_COLOR}
+                    className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] flex flex-col justify-between ${social.size}`}
                   >
-                    <a
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex flex-col justify-between h-full group"
-                    >
-                      <div className="flex flex-row justify-between items-start w-full">
-                        <div className="bg-white/5 p-3.5 rounded-2xl border border-white/5 flex items-center justify-center">
-                          <i className={`${social.iconClass} text-3xl`}></i>
-                        </div>
-                        <div className="text-gray-400 text-xs font-semibold font-mono bg-white/5 border border-white/5 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 group-hover:text-white transition-colors">
-                          CONNECT
-                          <i className="bi bi-arrow-up-right text-[10px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"></i>
-                        </div>
+                    <div className="flex flex-row justify-between items-start w-full">
+                      <div className="bg-white/5 p-3.5 rounded-2xl border border-white/5 flex items-center justify-center">
+                        <i className={`${social.iconClass} text-3xl`}></i>
                       </div>
-                      <div className="mt-4">
-                        <h3 className="text-xl font-semibold text-white uppercase tracking-wide leading-none group-hover:text-[#aed2ff] transition-colors duration-300">
-                          {social.name}
-                        </h3>
-                        <p className="text-[#aed2ff]/70 text-xs mt-1.5 font-mono">{social.username}</p>
-                        
-                        <div className="mt-3 pt-3 border-t border-white/5">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-gray-400">
-                            <span>1.2k Followers</span>
-                            <span>•</span>
-                            <span>500+ Connections</span>
-                          </div>
-                        </div>
+                      <div className="flex items-center gap-1.5 z-10">
+                        <button
+                          onClick={handlePrev}
+                          className="w-6 h-6 rounded-full border border-white/10 hover:border-white/35 hover:bg-white/5 flex items-center justify-center text-xs text-white focus:outline-none"
+                          title="Previous Highlight"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          onClick={handleNext}
+                          className="w-6 h-6 rounded-full border border-white/10 hover:border-white/35 hover:bg-white/5 flex items-center justify-center text-xs text-white focus:outline-none"
+                          title="Next Highlight"
+                        >
+                          ›
+                        </button>
                       </div>
-                    </a>
-                  </SpotlightCard>
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col justify-between mt-4 text-left">
+                      <div>
+                        <div className="flex justify-between items-center w-full">
+                          <h4 className="text-[10px] font-semibold tracking-wider font-mono text-[#aed2ff] uppercase">
+                            {activeHighlight.title}
+                          </h4>
+                          <span className="text-[9px] text-white/50 font-mono">
+                            {linkedinIndex + 1}/{linkedinHighlights.length}
+                          </span>
+                        </div>
+                        <p className="text-white text-xs mt-1 font-mono font-medium">{activeHighlight.stat}</p>
+                        <p className="text-gray-300 mt-2 text-[11px] leading-relaxed">
+                          {activeHighlight.desc}
+                        </p>
+                      </div>
+
+                      <div className="mt-3 pt-3 border-t border-white/5 flex justify-between items-center">
+                        <div className="flex gap-1">
+                          {activeHighlight.techs.map((t, idx) => (
+                            <span key={idx} className="text-[8px] font-mono bg-white/5 border border-white/5 px-1.5 py-0.5 rounded text-white/70">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[9.5px] font-semibold font-mono text-white/60 hover:text-white uppercase tracking-wider flex items-center gap-0.5"
+                        >
+                          Connect
+                          <i className="bi bi-arrow-up-right text-[8px]"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </ParticleCard>
                 );
               }
 
               // Dynamic Instagram Card with follower counts
               if (social.id === "instagram") {
                 return (
-                  <SpotlightCard
+                  <ParticleCard
                     key={social.id}
                     layout
                     variants={cardVariants}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    color={social.spotlightColor}
+                    glowColor={GLOW_COLOR}
                     className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] ${social.size}`}
                   >
                     <a
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col justify-between h-full group"
+                      className="flex flex-col justify-between h-full group text-left"
                     >
                       <div className="flex flex-row justify-between items-start w-full">
                         <div className="bg-white/5 p-3.5 rounded-2xl border border-white/5 flex items-center justify-center">
@@ -886,31 +1063,29 @@ export default function Socials() {
                           {social.name}
                         </h3>
                         <p className="text-[#aed2ff]/70 text-xs mt-1.5 font-mono">{social.username}</p>
+                        <p className="text-gray-300 mt-2.5 text-xs leading-relaxed">
+                          {social.desc}
+                        </p>
                         
-                        {/* 3-Column Recent Posts Mock Grid */}
-                      
-
-                        <div className="mt-4 pt-3 border-t border-white/5">
-                          <div className="flex justify-between items-center text-[10px] font-mono text-gray-400">
-                            <span>3.1k Followers</span>
-                            <span>•</span>
-                            <span>10 Posts</span>
-                          </div>
+                        <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-[10px] font-mono text-gray-400">
+                          <span>3.1k Followers</span>
+                          <span>•</span>
+                          <span>10 Posts</span>
                         </div>
                       </div>
                     </a>
-                  </SpotlightCard>
+                  </ParticleCard>
                 );
               }
 
               // Standard Link Card (Theme Glassmorphism Styled with 3D perspective hover)
               return (
-                <SpotlightCard
+                <ParticleCard
                   key={social.id}
                   layout
                   variants={cardVariants}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  color={social.spotlightColor}
+                  glowColor={GLOW_COLOR}
                   className={`black-gradient border border-[#303034] rounded-3xl p-6 min-h-[220px] ${social.size || ""}`}
                 >
                   <a
@@ -938,7 +1113,7 @@ export default function Socials() {
                       <p className="text-gray-300 mt-3 text-sm leading-relaxed">{social.desc}</p>
                     </div>
                   </a>
-                </SpotlightCard>
+                </ParticleCard>
               );
             })}
           </AnimatePresence>

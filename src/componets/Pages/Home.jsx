@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Stack from "../Stack";
 import WorkSnippetCard from "../WorkSnippetCard";
 import AboutMeCard from "../AboutMeCard";
+import CircularGallery from "../CircularGallery";
 import { PageSeo } from "../Seo";
 import Background from "../Background";
 import { NavLink } from "react-router-dom";
@@ -44,6 +45,26 @@ export default function Home() {
         });
     },
   });
+
+  const { data: galleryData } = useQuery({
+    queryKey: ["GalleryImages"],
+    queryFn: () =>
+      fetch(`${ApiBaseURL}api/gallery`)
+        .then((res) => res.json())
+        .then((json) => json.data ?? []),
+    staleTime: 1000 * 30,
+  });
+
+  const { data: aboutData } = useQuery({
+    queryKey: ["AboutData"],
+    queryFn: () =>
+      fetch(`${ApiBaseURL}api/about`)
+        .then((res) => res.json())
+        .then((json) => json ?? {}),
+    staleTime: 1000 * 30,
+  });
+
+  const galleryItems = Array.isArray(galleryData) && galleryData.length > 0 ? galleryData : undefined;
 
   useEffect(() => {
     window.scrollTo(0,0);
@@ -258,13 +279,27 @@ export default function Home() {
         )}
       </div>
 
-      {/* About Me */}
+      {/* About Me & Gallery */}
       <div className="flex flex-col items-center justify-center w-full z-10 py-10 min-h-[80vh]">
-        <h2 className="text-5xl md:text-6xl  font-semibold w-full md:text-center md:px-0 text-start px-10 SubHeadText">
-          About Me.
-        </h2>
+        {/* Top Borderless Auto-Rotating Circular Gallery */}
+        <div className="w-full h-[480px] md:h-[550px] relative z-10 overflow-hidden pt-2 mb-4">
+          <CircularGallery
+            items={galleryItems}
+            bend={3}
+            textColor="#ffffff"
+            borderRadius={0.05}
+            scrollEase={0.03}
+            autoRotate={true}
+            autoRotateSpeed={0.05}
+          />
+        </div>
+
         <div className="w-full">
-          <AboutMeCard fromRef="home" />
+          <AboutMeCard
+            title="About Me."
+            aboutText={aboutData?.about_me}
+            titleClasses="text-5xl md:text-6xl font-semibold w-full md:text-center md:px-0 text-start px-10 SubHeadText"
+          />
         </div>
         <NavLink
           to="about"

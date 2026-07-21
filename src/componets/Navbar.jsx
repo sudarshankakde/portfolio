@@ -1,133 +1,60 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import projectSvg from "../../src/assets/Images/svg/project.svg";
-import socialsSvg from "../../src/assets/Images/svg/socials.svg";
-import contactSvg from "../../src/assets/Images/svg/contact.svg";
-import experinceSvg from "../../src/assets/Images/svg/Experince.svg";
-import blogSvg from "../../src/assets/Images/svg/blog.svg";
-import menuSvg from "../../src/assets/Images/svg/menu.svg";
-import Headroom from "react-headroom";
+import StaggeredMenu from "./StaggeredMenu";
 
 export const NavListItems = [
   {
-    title: "project",
-    link: "project",
-    svg: projectSvg,
+    label: "Home",
+    link: "/"
   },
   {
-    title: "EXPERIENCE",
-    link: "experience",
-    svg: experinceSvg,
+    label: "About",
+    link: "/about"
   },
   {
-    title: "socials",
-    link: "socials",
-    svg: socialsSvg,
+    label: "Projects",
+    link: "/project"
   },
   {
-    title: "blog",
-    link: "blog",
-    svg: blogSvg,
+    label: "Experience",
+    link: "/experience"
   },
   {
-    title: "contact",
-    link: "contact",
-    svg: contactSvg,
+    label: "Resume",
+    link: "/resume"
   },
+  {
+    label: "Blog",
+    link: "/blog"
+  },
+  {
+    label: "Socials",
+    link: "/socials"
+  },
+  {
+    label: "Contact",
+    link: "/contact"
+  }
+];
+
+const socialItems = [
+  { label: "GitHub", link: "https://github.com/sudarshankakde" },
+  { label: "LinkedIn", link: "https://linkedin.com/in/sudarshan-kakde-510b15194" },
+  { label: "Instagram", link: "https://instagram.com/sudarshan_kakde_" }
 ];
 
 export default function Navbar() {
-  function showNavbar() {
-    var navbarState = document.getElementById("togglebtn");
-    var navbarSmall = document.getElementById("navbarSmall").classList;
-    if (
-      navbarState.attributes.getNamedItem("data-navbarstate").value === "hidden"
-    ) {
-      navbarSmall.replace("invisible", "visible");
-      navbarState.setAttribute("data-navbarstate", "block");
-    } else {
-      navbarSmall.replace("visible", "invisible");
-      navbarState.setAttribute("data-navbarstate", "hidden");
-    }
-  }
-
   return (
-    <Headroom
-      style={{
-        zIndex: 999,
-        WebkitTransition: "all .5s ease-in-out",
-        MozTransition: "all .5s ease-in-out",
-        OTransition: "all .5s ease-in-out",
-        transition: "all .5s ease-in-out",
-      }}
-      onPin={() => {
-        document.getElementById("navbar").classList.remove("black-gradient");
-      }}
-      onUnpin={() => {
-        document.getElementById("navbar").classList.add("black-gradient");
-      }} 
-      
-    >
-      <div className="flex flex-col items-center justify-center navbar md:mx-0 mx-3 z-[999]">
-        <div
-          className=" w-full lg:w-[60%] black-gradient border border-[#303034] z-[999] rounded-full mt-4 px-4 shadow-sm shadow-gray-500/50 bg-[#0b021a]"
-          id="navbar"
-        >
-          <div className="flex flex-row items-center justify-between mx-auto p-2">
-            <NavLink to="" id="logoText" className="text-white">
-              S
-            </NavLink>
-            <button
-              data-collapse-toggle="navbar-default"
-              data-navbarstate="hidden"
-              id="togglebtn"
-              type="button"
-              className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden"
-              onClick={showNavbar}
-            >
-              <img src={menuSvg} alt="Menu" />
-            </button>
-            <div className="hidden w-full md:block md:w-auto">
-              <div className="uppercase flex flex-col p-4 md:p-0 mt-4  md:flex-row md:space-x-8 md:mt-0 ">
-                {NavListItems.map((element, index) => {
-                  return (
-                    <NavLink
-                      to={element.link}
-                      key={index}
-                      target={element.target}
-                      className={() =>
-                        `z-[999] md:flex items-center justify-center hidden mr-2 font-[500] text-xs hover:text-white transition-all ease-in-out duration-300 tracking-wide  gap-1`
-                      }
-                    >
-                      <img src={element.svg} alt="Icon" />
-                      {element.title}
-                    </NavLink>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="w-full invisible  z-[999]" id="navbarSmall">
-        <div className="uppercase flex flex-row p-4 md:p-0    md:flex-row md:space-x-8 md:mt-0 justify-center gap-5 bg-purple flex-wrap">
-          {NavListItems.map((element, index) => {
-            return (
-              <NavLink
-                to={element.link}
-                key={index}
-                target={element.target}
-                className={() =>
-                  `z-[999] flex items-center justify-center mr-2 font-[500] text-xs hover:text-white transition-all ease-in-out duration-300 tracking-wide  gap-2`
-                }
-              >
-                <img src={element.svg} alt="Icon" />
-                {element.title}
-              </NavLink>
-            );
-          })}
-        </div>
-      </div>
-    </Headroom>
+    <StaggeredMenu
+      items={NavListItems}
+      socialItems={socialItems}
+      isFixed={true}
+      position="right"
+      menuButtonColor="#fff"
+      openMenuButtonColor="#fff"
+      accentColor="#9676ce"
+      zIndex={100}
+      openZIndex={99999}
+    />
   );
 }
+

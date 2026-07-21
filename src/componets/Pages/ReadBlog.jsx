@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { ApiBaseURL, MediaUrl } from "../..";
 import { BlogArticleSkeleton, ButtonDotsLoader } from "../SkeletonLoaders";
@@ -7,6 +7,7 @@ import axios from "axios";
 import ScrollIndicator from "../ScrollIndicator";
 import { useQuery } from "@tanstack/react-query";
 import { PageSeo } from "../Seo";
+import LineSidebar from "../LineSidebar";
 
 // Estimate reading time from raw HTML body text
 function readingTime(html) {
@@ -53,6 +54,98 @@ function ReadBlog() {
   const blog = data?.blog ?? null;
   const related = data?.related ?? [];
   const body = blog?.body ?? "";
+
+  // Dynamic Table of Contents sidebar items
+  const sidebarItems = useMemo(() => {
+    if (!blog) return ["Overview"];
+    const list = ["Overview"];
+    const blogBody = blog.body ?? "";
+    if (blogBody) {
+      const matches = [...blogBody.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi)];
+      const parsedHeadings = matches.map((m) => m[1].replace(/<[^>]+>/g, "").trim()).filter(Boolean);
+      if (parsedHeadings.length > 0) {
+        list.push(...parsedHeadings);
+      } else {
+        list.push("Article Content");
+      }
+    }
+    if (related.length > 0) list.push("Related Articles");
+    list.push("Newsletter");
+    return list;
+  }, [blog, related.length]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+    const getElementTop = (el) => (el ? Math.floor(el.getBoundingClientRect().top + window.scrollY) : Infinity);
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPos = window.scrollY + 180;
+          const sections = sidebarItems.map((label) => {
+            if (label === "Overview") return { label, top: 0 };
+            if (label === "Related Articles") {
+              return { label, top: getElementTop(document.getElementById("related-articles-section")) };
+            }
+            if (label === "Newsletter") {
+              return { label, top: getElementTop(document.getElementById("newsletter-section")) };
+            }
+            const allHeadings = document.querySelectorAll("article h2, article h3");
+            for (const h of allHeadings) {
+              if (h.innerText.trim().toLowerCase() === label.toLowerCase()) {
+                return { label, top: getElementTop(h) };
+              }
+            }
+            return { label, top: getElementTop(document.getElementById("article-body-section")) };
+          });
+
+          let currentIdx = 0;
+          for (let i = 0; i < sections.length; i++) {
+            if (scrollPos >= sections[i].top) {
+              currentIdx = i;
+            }
+          }
+          setActiveIndex((prev) => (prev !== currentIdx ? currentIdx : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [sidebarItems]);
+
+  const handleSectionClick = (index, label) => {
+    setActiveIndex(index);
+    if (label === "Overview") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (label === "Related Articles") {
+      const el = document.getElementById("related-articles-section");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (label === "Newsletter") {
+      const el = document.getElementById("newsletter-section");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    // Match heading text inside article
+    const allHeadings = document.querySelectorAll("article h2, article h3");
+    for (const h of allHeadings) {
+      if (h.innerText.trim().toLowerCase() === label.toLowerCase()) {
+        h.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    const bodyEl = document.getElementById("article-body-section");
+    if (bodyEl) bodyEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
     if (blog?.title) document.title = blog.title;
@@ -132,180 +225,199 @@ function ReadBlog() {
 
       <ScrollIndicator color="#9676ce" />
 
-      <article className="flex flex-col md:w-[60%] w-[90%] mx-auto pt-4 pb-20">
-        {/* Breadcrumb */}
-        <nav className="flex flex-row flex-wrap gap-2 items-center font-semibold text-sm md:mt-5 mb-6 text-white/50">
-          <NavLink to="/blog" className="hover:text-[#aed2ff] gap-1.5 flex items-center transition-colors duration-200">
-            <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z" />
-            </svg>
-            Blog
-          </NavLink>
-          <span className="opacity-40">/</span>
-          <span className="text-white/80 truncate max-w-[200px] md:max-w-none">{blog.title}</span>
-        </nav>
-
-        {/* Hero Image */}
-        <div className="rounded-2xl overflow-hidden w-full mb-8 border border-white/5">
-          <img
-            src={resolveImg(blog.image)}
-            alt={blog.title}
-            className="w-full object-cover"
-            style={{ aspectRatio: "16/9" }}
-            loading="eager"
-            width="1200"
-            height="675"
+      {/* Main Layout Container with LineSidebar Table of Contents */}
+      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-8 items-start justify-center pt-4 pb-20">
+        {/* Sticky Desktop LineSidebar ToC */}
+        <div className="hidden lg:block sticky top-28 z-20 min-w-[220px] pt-4 shrink-0">
+          <LineSidebar
+            items={sidebarItems}
+            active={activeIndex}
+            accentColor="#9676ce"
+            textColor="#c4c4c4"
+            markerColor="#6c6c6c"
+            defaultActive={0}
+            proximityRadius={120}
+            maxShift={25}
+            fontSize={1.0}
+            onItemClick={(index, label) => handleSectionClick(index, label)}
           />
         </div>
 
-        {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-4">
-          {blog.title}
-        </h1>
+        <article className="flex-1 w-full max-w-auto">
+          {/* Breadcrumb */}
+          <nav className="flex flex-row flex-wrap gap-2 items-center font-semibold text-sm md:mt-5 mb-6 text-white/50">
+            <NavLink to="/blog" className="hover:text-[#aed2ff] gap-1.5 flex items-center transition-colors duration-200">
+              <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z" />
+              </svg>
+              Blog
+            </NavLink>
+            <span className="opacity-40">/</span>
+            <span className="text-white/80 truncate max-w-[200px] md:max-w-none">{blog.title}</span>
+          </nav>
 
-        {/* Meta row */}
-        <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-white/40 mb-5">
-          <span className="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-            {blog.author_name || "Sudarshan Kakde"}
-          </span>
-          <span className="opacity-30">·</span>
-          <span className="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-            {publishDate}
-          </span>
-          <span className="opacity-30">·</span>
-          <span className="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-            </svg>
-            {mins} min read
-          </span>
-          <span className="opacity-30">·</span>
-          <span className="flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-            {blog.views?.toLocaleString() ?? 0} views
-          </span>
-        </div>
-
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {tags.map((t, i) => (
-              <span
-                key={i}
-                className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded-full border border-[#9676ce]/30 bg-[#9676ce]/10 text-[#aed2ff] uppercase tracking-wider"
-              >
-                {t}
-              </span>
-            ))}
+          {/* Hero Image */}
+          <div className="rounded-2xl overflow-hidden w-full mb-8 border border-white/5">
+            <img
+              src={resolveImg(blog.image)}
+              alt={blog.title}
+              className="w-full object-cover"
+              style={{ aspectRatio: "16/9" }}
+              loading="eager"
+              width="1200"
+              height="675"
+            />
           </div>
-        )}
 
-        {/* Summary */}
-        {blog.summary && (
-          <div className="border-l-2 border-[#9676ce]/50 pl-4 mb-8 text-white/60 text-sm italic leading-relaxed">
-            {blog.summary.replace(/<[^>]+>/g, "")}
+          {/* Title */}
+          <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-4">
+            {blog.title}
+          </h1>
+
+          {/* Meta row */}
+          <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-white/40 mb-5">
+            <span className="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              {blog.author_name || "Sudarshan Kakde"}
+            </span>
+            <span className="opacity-30">·</span>
+            <span className="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {publishDate}
+            </span>
+            <span className="opacity-30">·</span>
+            <span className="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {mins} min read
+            </span>
+            <span className="opacity-30">·</span>
+            <span className="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              {blog.views?.toLocaleString() ?? 0} views
+            </span>
           </div>
-        )}
 
-        {/* Article Body */}
-        <div className="prose-blog text-white/85 leading-relaxed text-[15px]">
-          {parse(body)}
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 my-14 opacity-20">
-          <div className="h-px flex-1 bg-white/30" />
-          <span className="text-xs font-mono tracking-widest uppercase">end of article</span>
-          <div className="h-px flex-1 bg-white/30" />
-        </div>
-
-        {/* Related Posts */}
-        {related.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold tracking-tight mb-6 text-white">
-              Related Articles
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {related.map((post, i) => (
-                <Link
+          {/* Tags */}
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8">
+              {tags.map((t, i) => (
+                <span
                   key={i}
-                  to={`/blog/${post.slug}`}
-                  className="group flex flex-col gap-3 border border-[#303034] hover:border-[#9676ce]/40 black-gradient rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                  className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded-full border border-[#9676ce]/30 bg-[#9676ce]/10 text-[#aed2ff] uppercase tracking-wider"
                 >
-                  <div className="overflow-hidden">
-                    <img
-                      src={resolveImg(post.image)}
-                      alt={post.title}
-                      className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      style={{ aspectRatio: "16/9" }}
-                      loading="lazy"
-                      width="600"
-                      height="338"
-                    />
-                  </div>
-                  <div className="px-4 pb-4">
-                    <p className="text-[10px] font-mono text-white/30 mb-1.5">
-                      {post.publish_date
-                        ? new Date(post.publish_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-                        : ""}
-                    </p>
-                    <h3 className="text-base font-semibold text-white group-hover:text-[#aed2ff] transition-colors duration-200 leading-snug line-clamp-2">
-                      {post.title}
-                    </h3>
-                    {post.summary && (
-                      <p className="text-xs text-white/40 mt-1.5 line-clamp-2 leading-relaxed">
-                        {post.summary.replace(/<[^>]+>/g, "")}
-                      </p>
-                    )}
-                  </div>
-                </Link>
+                  {t}
+                </span>
               ))}
             </div>
-          </section>
-        )}
+          )}
 
-        {/* Newsletter */}
-        <section className="flex flex-col items-center py-12 px-6 border border-[#303034] rounded-2xl black-gradient">
-          <div className="text-3xl mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#ffffff" class="bi bi-envelope" viewBox="0 0 16 16">
-  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-</svg></div>
-          <h3 className="text-2xl font-bold tracking-tight text-white mb-1">Subscribe to Intricate</h3>
-          <p className="text-sm text-white/40 text-center mb-6 max-w-sm">
-            Get new articles delivered straight to your inbox — no spam, unsubscribe anytime.
-          </p>
-          <form onSubmit={handleSubscribe} className="w-full max-w-md">
-            <div className="flex gap-2">
-              <input
-                type="email"
-                id="newsletter-email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="flex-1 bg-white/5 border border-[#303034] focus:border-[#9676ce] outline-none rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 transition-colors duration-200"
-              />
-              <button
-                type="submit"
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#9676ce] to-[#7d57c1] text-white hover:opacity-90 transition-opacity duration-200 min-w-[110px] flex items-center justify-center"
-              >
-                {spinner ? <ButtonDotsLoader color="white" /> : "Subscribe"}
-              </button>
+          {/* Summary */}
+          {blog.summary && (
+            <div className="border-l-2 border-[#9676ce]/50 pl-4 mb-8 text-white/60 text-sm italic leading-relaxed">
+              {blog.summary.replace(/<[^>]+>/g, "")}
             </div>
-            {response && (
-              <p className="text-xs text-[#aed2ff] mt-3 text-center">{response}</p>
-            )}
-          </form>
-        </section>
-      </article>
+          )}
+
+          {/* Article Body */}
+          <div id="article-body-section" className="prose-blog text-white/85 leading-relaxed text-[15px]">
+            {parse(body)}
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-14 opacity-20">
+            <div className="h-px flex-1 bg-white/30" />
+            <span className="text-xs font-mono tracking-widest uppercase">end of article</span>
+            <div className="h-px flex-1 bg-white/30" />
+          </div>
+
+          {/* Related Posts */}
+          {related.length > 0 && (
+            <section id="related-articles-section" className="mb-16">
+              <h2 className="text-2xl font-bold tracking-tight mb-6 text-white">
+                Related Articles
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {related.map((post, i) => (
+                  <Link
+                    key={i}
+                    to={`/blog/${post.slug}`}
+                    className="group flex flex-col gap-3 border border-[#303034] hover:border-[#9676ce]/40 black-gradient rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="overflow-hidden">
+                      <img
+                        src={resolveImg(post.image)}
+                        alt={post.title}
+                        className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        style={{ aspectRatio: "16/9" }}
+                        loading="lazy"
+                        width="600"
+                        height="338"
+                      />
+                    </div>
+                    <div className="px-4 pb-4">
+                      <p className="text-[10px] font-mono text-white/30 mb-1.5">
+                        {post.publish_date
+                          ? new Date(post.publish_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                          : ""}
+                      </p>
+                      <h3 className="text-base font-semibold text-white group-hover:text-[#aed2ff] transition-colors duration-200 leading-snug line-clamp-2">
+                        {post.title}
+                      </h3>
+                      {post.summary && (
+                        <p className="text-xs text-white/40 mt-1.5 line-clamp-2 leading-relaxed">
+                          {post.summary.replace(/<[^>]+>/g, "")}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Newsletter */}
+          <section id="newsletter-section" className="flex flex-col items-center py-12 px-6 border border-[#303034] rounded-2xl black-gradient">
+            <div className="text-3xl mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#ffffff" className="bi bi-envelope" viewBox="0 0 16 16">
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+            </svg></div>
+            <h3 className="text-2xl font-bold tracking-tight text-white mb-1">Subscribe to Intricate</h3>
+            <p className="text-sm text-white/40 text-center mb-6 max-w-sm">
+              Get new articles delivered straight to your inbox — no spam, unsubscribe anytime.
+            </p>
+            <form onSubmit={handleSubscribe} className="w-full max-w-md">
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  id="newsletter-email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  className="flex-1 bg-white/5 border border-[#303034] focus:border-[#9676ce] outline-none rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 transition-colors duration-200"
+                />
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#9676ce] to-[#7d57c1] text-white hover:opacity-90 transition-opacity duration-200 min-w-[110px] flex items-center justify-center"
+                >
+                  {spinner ? <ButtonDotsLoader color="white" /> : "Subscribe"}
+                </button>
+              </div>
+              {response && (
+                <p className="text-xs text-[#aed2ff] mt-3 text-center">{response}</p>
+              )}
+            </form>
+          </section>
+        </article>
+      </div>
     </div>
   );
 }
