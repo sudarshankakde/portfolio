@@ -79,53 +79,68 @@ export function ExperienceTimelineSkeleton() {
 // Full-page blog read skeleton matching the ReadBlog layout
 export function BlogArticleSkeleton() {
   return (
-    <div className="flex flex-col md:w-[60%] w-[90%] mx-auto pt-4 animate-pulse">
-      {/* Breadcrumb */}
-      <div className="flex gap-2 items-center mb-6">
-        <Bone className="h-4 w-14 rounded-md" />
-        <Bone className="h-4 w-4 rounded-md" />
-        <Bone className="h-4 w-40 rounded-md" />
+    <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-8 justify-center pt-4 pb-20 animate-pulse">
+      {/* Left Table of Contents Sidebar Skeleton */}
+      <div className="hidden lg:block min-w-[220px] shrink-0 pt-4">
+        <div className="space-y-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Bone className="h-0.5 w-12 rounded-full" />
+              <Bone className="h-4 w-5 rounded-md" />
+              <Bone className="h-4 rounded-md" style={{ width: `${70 + (i % 3) * 25}px` }} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Hero image */}
-      <Bone className="rounded-2xl w-full mb-6" style={{ aspectRatio: '16/9' }} />
+      {/* Main Article Skeleton */}
+      <div className="flex-1 w-full max-w-auto">
+        {/* Breadcrumb */}
+        <div className="flex gap-2 items-center mb-6">
+          <Bone className="h-4 w-14 rounded-md" />
+          <Bone className="h-4 w-3 rounded-md" />
+          <Bone className="h-4 w-40 rounded-md" />
+        </div>
 
-      {/* Title */}
-      <Bone className="h-9 w-5/6 rounded-md mb-3" />
-      <Bone className="h-7 w-3/5 rounded-md mb-5" />
+        {/* Hero image */}
+        <Bone className="rounded-2xl w-full mb-8" style={{ aspectRatio: '16/9' }} />
 
-      {/* Meta: author · date · reading time */}
-      <div className="flex gap-3 mb-4">
-        <Bone className="h-5 w-28 rounded-full" />
-        <Bone className="h-5 w-24 rounded-full" />
-        <Bone className="h-5 w-20 rounded-full" />
-      </div>
+        {/* Title */}
+        <Bone className="h-9 w-5/6 rounded-md mb-4" />
 
-      {/* Tags */}
-      <div className="flex gap-2 mb-8">
-        <Bone className="h-6 w-16 rounded-full" />
-        <Bone className="h-6 w-20 rounded-full" />
-        <Bone className="h-6 w-14 rounded-full" />
-      </div>
+        {/* Meta: author · date · reading time · views */}
+        <div className="flex gap-3 mb-5">
+          <Bone className="h-4 w-28 rounded-full" />
+          <Bone className="h-4 w-24 rounded-full" />
+          <Bone className="h-4 w-20 rounded-full" />
+          <Bone className="h-4 w-16 rounded-full" />
+        </div>
 
-      {/* Body paragraphs */}
-      <div className="space-y-3 mb-6">
-        {[1, 0.95, 1, 0.85, 1, 0.9, 1, 0.75, 1, 0.88, 1, 0.6].map((w, i) => (
-          <Bone key={i} className="h-4 rounded-md" style={{ width: `${w * 100}%` }} />
-        ))}
-      </div>
-      <Bone className="h-4 w-1/2 rounded-md mb-10" />
+        {/* Tags */}
+        <div className="flex gap-2 mb-8">
+          <Bone className="h-6 w-16 rounded-full" />
+          <Bone className="h-6 w-20 rounded-full" />
+          <Bone className="h-6 w-14 rounded-full" />
+        </div>
 
-      {/* Related posts heading */}
-      <Bone className="h-8 w-40 rounded-md mb-5" />
-      <div className="flex gap-4">
-        {[0, 1].map((i) => (
-          <div key={i} className="flex-1 flex flex-col gap-2">
-            <Bone className="rounded-xl w-full" style={{ aspectRatio: '16/9' }} />
-            <Bone className="h-5 w-3/4 rounded-md" />
-            <Bone className="h-4 w-1/2 rounded-md" />
-          </div>
-        ))}
+        {/* Article Body */}
+        <div className="space-y-3 mb-10">
+          {[1, 0.95, 1, 0.85, 1, 0.9, 1, 0.75, 1, 0.88, 1, 0.6].map((w, i) => (
+            <Bone key={i} className="h-4 rounded-md" style={{ width: `${w * 100}%` }} />
+          ))}
+        </div>
+
+        {/* Related articles skeleton */}
+        <Bone className="h-8 w-40 rounded-md mb-6" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
+          {[0, 1].map((i) => (
+            <div key={i} className="flex flex-col gap-3 border border-[#303034] black-gradient rounded-2xl p-4">
+              <Bone className="rounded-xl w-full" style={{ aspectRatio: '16/9' }} />
+              <Bone className="h-5 w-3/4 rounded-md" />
+              <Bone className="h-4 w-1/2 rounded-md" />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -135,72 +150,68 @@ export function BlogArticleSkeleton() {
 // Full-page project case study read skeleton matching the ReadProject layout
 export function ProjectArticleSkeleton() {
   return (
-    <div className="flex flex-col md:w-[60%] w-[90%] mx-auto pt-4 animate-pulse">
-      {/* Breadcrumb */}
-      <div className="flex gap-2 items-center mb-6">
-        <Bone className="h-4 w-16 rounded-md" />
-        <Bone className="h-4 w-4 rounded-md" />
-        <Bone className="h-4 w-48 rounded-md" />
-      </div>
-
-      {/* Hero image */}
-      <Bone className="rounded-2xl w-full mb-8" style={{ aspectRatio: '16/9' }} />
-
-      {/* Title & Action Buttons Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-6 mb-8">
-        <div className="flex-1 space-y-2.5">
-          <Bone className="h-9 w-3/4 rounded-md" />
-          <Bone className="h-4 w-48 rounded-md" />
-        </div>
-        <div className="flex gap-3">
-          <Bone className="h-9 w-28 rounded-xl" />
-          <Bone className="h-9 w-28 rounded-xl" />
+    <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 justify-center pt-2 pb-12 animate-pulse">
+      {/* Left Table of Contents Sidebar Skeleton */}
+      <div className="hidden lg:block min-w-[200px] shrink-0 pt-2">
+        <div className="space-y-4">
+          {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Bone className="h-0.5 w-12 rounded-full" />
+              <Bone className="h-4 w-5 rounded-md" />
+              <Bone className="h-4 rounded-md" style={{ width: `${60 + (i % 3) * 20}px` }} />
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Content & Sidebar Grid */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start mb-16">
-        {/* Left Side: Body content */}
-        <div className="flex-1 w-full space-y-3">
-          {[1, 0.95, 1, 0.85, 1, 0.9, 1, 0.75, 1, 0.88, 1, 0.6].map((w, i) => (
-            <Bone key={i} className="h-4 rounded-md" style={{ width: `${w * 100}%` }} />
-          ))}
-          <div className="h-4" />
-          {[1, 0.98, 1, 0.92, 1, 0.87, 0.5].map((w, i) => (
+      {/* Main Article Skeleton */}
+      <div className="flex-1 min-w-0 w-full">
+        {/* Breadcrumb */}
+        <div className="flex gap-2 items-center mb-4">
+          <Bone className="h-4 w-16 rounded-md" />
+          <Bone className="h-4 w-3 rounded-md" />
+          <Bone className="h-4 w-40 rounded-md" />
+        </div>
+
+        {/* Hero image */}
+        <Bone className="rounded-2xl w-full mb-6" style={{ aspectRatio: '16/9' }} />
+
+        {/* Title & Action Buttons Row */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5 mb-6">
+          <div className="flex-1 space-y-2">
+            <Bone className="h-9 w-3/4 rounded-md" />
+            <Bone className="h-4 w-48 rounded-md" />
+          </div>
+          <div className="flex gap-3">
+            <Bone className="h-10 w-28 rounded-xl" />
+            <Bone className="h-10 w-28 rounded-xl" />
+          </div>
+        </div>
+
+        {/* Case Study Content */}
+        <div className="space-y-3 mb-8">
+          {[1, 0.95, 1, 0.85, 1, 0.9, 1, 0.75, 1, 0.88, 0.6].map((w, i) => (
             <Bone key={i} className="h-4 rounded-md" style={{ width: `${w * 100}%` }} />
           ))}
         </div>
 
-        {/* Right Side: Sidebar */}
-        <div className="w-full lg:w-[280px] shrink-0 border border-[#303034] rounded-2xl p-5 space-y-4">
-          <Bone className="h-4 w-36 rounded-md" />
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl px-3 py-2">
-                <Bone className="w-6 h-6 rounded-md flex-shrink-0" />
-                <div className="space-y-1.5 flex-1">
-                  <Bone className="h-3 w-2/3 rounded-md" />
-                  <Bone className="h-2 w-1/3 rounded-md" />
+        {/* Technologies marquee bar skeleton */}
+        <Bone className="h-16 w-full rounded-2xl mb-8" />
+
+        {/* Other Projects section skeleton */}
+        <div className="w-full pt-10 border-t border-white/10">
+          <Bone className="h-8 w-44 rounded-md mb-8" />
+          <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch w-full">
+            {[0, 1].map((i) => (
+              <div key={i} className="flex-1 flex flex-col gap-3">
+                <Bone className="rounded-2xl w-full" style={{ aspectRatio: '16/9' }} />
+                <div className="space-y-2">
+                  <Bone className="h-6 w-3/4 rounded-md" />
+                  <Bone className="h-4 w-1/2 rounded-md" />
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Suggested Projects Section */}
-      <div className="w-full pt-10 border-t border-white/10">
-        <Bone className="h-8 w-44 rounded-md mb-8" />
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch w-full">
-          {[0, 1].map((i) => (
-            <div key={i} className="flex-1 flex flex-col gap-3">
-              <Bone className="rounded-2xl w-full" style={{ aspectRatio: '16/9' }} />
-              <div className="space-y-2">
-                <Bone className="h-6 w-3/4 rounded-md" />
-                <Bone className="h-4 w-1/2 rounded-md" />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>
