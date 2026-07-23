@@ -16,6 +16,17 @@ function resolveImg(src) {
     : MediaUrl + src;
 }
 
+function decodeEntities(str) {
+  if (!str) return "";
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
 function ReadProject() {
   const { slug } = useParams();
 
@@ -72,7 +83,7 @@ function ReadProject() {
     if (projectBody) {
       const matches = [...projectBody.matchAll(/<h[23][^>]*>(.*?)<\/h[23]>/gi)];
       const parsedHeadings = matches
-        .map((m) => m[1].replace(/<[^>]+>/g, "").replace(/^\d+[.\s-]*/, "").trim())
+        .map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, "").replace(/^\d+[.\s-]*/, "").trim()))
         .filter(Boolean);
       if (parsedHeadings.length > 0) {
         list.push(...parsedHeadings);
@@ -191,8 +202,9 @@ function ReadProject() {
         url={`https://sudarshankakde.tech/project/${project.slug}`}
       />
 
-      <ScrollIndicator color="#9676ce" />      {/* Main Layout Container with LineSidebar Table of Contents */}
-      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 items-start justify-center pt-2 pb-12 min-w-0 overflow-hidden">
+      <ScrollIndicator color="#9676ce" />
+      {/* Main Layout Container with LineSidebar Table of Contents */}
+      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 items-start justify-center pt-2 pb-12">
         {/* Sticky Desktop LineSidebar ToC */}
         <div className="hidden lg:block sticky top-28 z-20 min-w-[200px] pt-2 shrink-0">
           <LineSidebar

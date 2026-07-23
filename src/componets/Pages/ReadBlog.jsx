@@ -24,6 +24,17 @@ function resolveImg(src) {
     : MediaUrl + src;
 }
 
+function decodeEntities(str) {
+  if (!str) return "";
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
 function ReadBlog() {
   const { slug } = useParams();
   const [spinner, setSpinner] = useState(false);
@@ -62,7 +73,7 @@ function ReadBlog() {
     const blogBody = blog.body ?? "";
     if (blogBody) {
       const matches = [...blogBody.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi)];
-      const parsedHeadings = matches.map((m) => m[1].replace(/<[^>]+>/g, "").trim()).filter(Boolean);
+      const parsedHeadings = matches.map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, "").trim())).filter(Boolean);
       if (parsedHeadings.length > 0) {
         list.push(...parsedHeadings);
       } else {
