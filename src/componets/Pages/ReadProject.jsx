@@ -204,21 +204,24 @@ function ReadProject() {
 
       <ScrollIndicator color="#9676ce" />
       {/* Main Layout Container with LineSidebar Table of Contents */}
-      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 items-start justify-center pt-2 pb-12">
-        {/* Sticky Desktop LineSidebar ToC */}
-        <div className="hidden lg:block sticky top-28 z-20 min-w-[200px] pt-2 shrink-0">
-          <LineSidebar
-            items={sidebarItems}
-            active={activeIndex}
-            accentColor="#9676ce"
-            textColor="#c4c4c4"
-            markerColor="#6c6c6c"
-            defaultActive={0}
-            proximityRadius={120}
-            maxShift={25}
-            fontSize={1.0}
-            onItemClick={(index, label) => handleSectionClick(index, label)}
-          />
+      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-6 lg:gap-8 justify-center pt-2 pb-12">
+        {/* Sidebar Column (stretches to full article height) */}
+        <div className="hidden lg:block min-w-[200px] shrink-0">
+          {/* Sticky Desktop LineSidebar ToC */}
+          <div className="sticky top-24 z-20 pt-2">
+            <LineSidebar
+              items={sidebarItems}
+              active={activeIndex}
+              accentColor="#9676ce"
+              textColor="#c4c4c4"
+              markerColor="#6c6c6c"
+              defaultActive={0}
+              proximityRadius={120}
+              maxShift={25}
+              fontSize={1.0}
+              onItemClick={(index, label) => handleSectionClick(index, label)}
+            />
+          </div>
         </div>
 
         <article className="flex-1 min-w-0 w-full overflow-hidden">

@@ -237,21 +237,24 @@ function ReadBlog() {
       <ScrollIndicator color="#9676ce" />
 
       {/* Main Layout Container with LineSidebar Table of Contents */}
-      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-8 items-start justify-center pt-4 pb-20">
-        {/* Sticky Desktop LineSidebar ToC */}
-        <div className="hidden lg:block sticky top-28 z-20 min-w-[220px] pt-4 shrink-0">
-          <LineSidebar
-            items={sidebarItems}
-            active={activeIndex}
-            accentColor="#9676ce"
-            textColor="#c4c4c4"
-            markerColor="#6c6c6c"
-            defaultActive={0}
-            proximityRadius={120}
-            maxShift={25}
-            fontSize={1.0}
-            onItemClick={(index, label) => handleSectionClick(index, label)}
-          />
+      <div className="flex flex-col lg:flex-row w-full max-w-[90%] mx-auto gap-8 justify-center pt-4 pb-20">
+        {/* Sidebar Column (stretches to full article height) */}
+        <div className="hidden lg:block min-w-[220px] shrink-0">
+          {/* Sticky Desktop LineSidebar ToC */}
+          <div className="sticky top-24 z-20 pt-4">
+            <LineSidebar
+              items={sidebarItems}
+              active={activeIndex}
+              accentColor="#9676ce"
+              textColor="#c4c4c4"
+              markerColor="#6c6c6c"
+              defaultActive={0}
+              proximityRadius={120}
+              maxShift={25}
+              fontSize={1.0}
+              onItemClick={(index, label) => handleSectionClick(index, label)}
+            />
+          </div>
         </div>
 
         <article className="flex-1 w-full max-w-auto">
